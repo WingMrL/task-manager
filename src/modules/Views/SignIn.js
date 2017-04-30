@@ -7,7 +7,8 @@ import FooterContainer from '../Layout/FooterContainer';
 
 import axios from 'axios';
 import config from '../../../config/config';
-import HomePage from '../Components/HomePage';
+import Footer from '../Components/Footer';
+import SignInContent from '../Components/SignInContent';
 
 class Index extends React.Component {
 
@@ -25,9 +26,10 @@ class Index extends React.Component {
                 <HeaderContainer>
                 </HeaderContainer>
                 <ContentContainer>
-                    <HomePage />
+                    <SignInContent />
                 </ContentContainer>
                 <FooterContainer>
+                    <Footer />
                 </FooterContainer>
             </LayoutMain>
         );

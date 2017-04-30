@@ -1,6 +1,8 @@
 var express = require('express');
 var path = require('path');
 var favicon = require('serve-favicon');
+var sessions = require('express-session');
+var mongoStore = require('connect-mongo')(sessions);
 var mongoose = require('mongoose');
 
 var logger = require('morgan');
@@ -47,6 +49,13 @@ app.use(logger('dev'));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
+app.use(express.session({
+  secret: 'TaskManager',
+  store: new mongoStore({
+    url: config.dbUrl,
+    collection: 'sessions'
+  })
+}));
 var oneYear = 60 * 1000 * 60 * 24 * 365;
 app.use(express.static(path.join(__dirname, '..', 'dist'), {maxAge: oneYear}));
 app.use(express.static(path.join(__dirname, '..', 'dist', 'upload'), {maxAge: oneYear}));
