@@ -1,0 +1,25 @@
+.logo-container {
+    display: flex;
+}
+
+.logo {
+    width: 164px;
+    height: 24px;
+    display: block;
+    background-image: url('../../assets/images/header/logo_seewo.png');
+    background-repeat: no-repeat;
+    background-size: contain;
+    background-position: center;
+}
+
+.title {
+    width: 120px;
+    height: 24px;
+    font-weight: 300;
+    line-height: 24px;
+    margin-left: 11px;
+    display: block;
+    font-family: "SourceHanSansCN-Normal Microsoft YaHei";
+    font-size: 24px;
+    color: #fff;
+}

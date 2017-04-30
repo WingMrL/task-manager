@@ -1,0 +1,29 @@
+.custom-file-upload-container {
+    width: 100px;
+    height: 100px;
+    margin-left: 10px;
+    margin-top: 10px;
+    float: left;
+    background-image: url('../../assets/images/content/ic_弹窗_添加_normal.png');
+    background-position: center;
+    background-repeat: no-repeat;
+    border: 1px dashed #ccc;
+
+    .upload {
+        width: 100px;
+        height: 100px;
+    }
+}
+
+.custom-file-upload-container:hover {
+    cursor: pointer;
+    box-shadow: 0 0 10px 0 rgba(0, 0, 0, .2);
+}
+
+.custom-file-upload-container:nth-child(3n+1) {
+    margin-left: 30px;
+}
+
+.custom-file-upload-container:nth-child(-n + 3) {
+    margin-top: 30px;
+}

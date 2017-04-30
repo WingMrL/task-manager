@@ -1,0 +1,6 @@
+.menu-btn-container {
+    height: 64px;
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+}

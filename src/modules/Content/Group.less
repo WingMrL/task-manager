@@ -1,0 +1,66 @@
+.group-container-inner {
+    width: 200px;
+    height: 240px;
+    margin-top: 40px;
+    background-color: transparent;
+    margin-left: 25px;
+
+    .icon-container {
+        width: 200px;
+        height: 200px;
+        border-radius: 6px;
+        background-color: #fff;
+
+        .ul {
+            display: flex;
+            justify-content: flex-start;
+            align-items: center;
+            flex-wrap: wrap;
+            padding: 26px;
+
+            .li {
+                width: 36px;
+                height: 36px;
+                margin-left: 20px;
+                margin-top: 20px;
+                // background-image: url('../../assets/images/menu/Logo_en5.png');
+                background-repeat: no-repeat;
+                background-size: contain;
+                background-position: center;
+            }
+            
+            .li:nth-child(3n + 1) {
+                margin-left: 0;
+            }
+
+            .li:nth-child(-n + 3) {
+                margin-top: 0;
+            }
+        }
+    }
+
+    .group-name-div {
+        width: 200px;
+        height: 18px;
+        line-height: 18px;
+        text-align: center;
+        font-size: 18px;
+        color: #666;
+        margin-top: 18px;
+    }
+}
+
+.group-container-inner:hover .icon-container {
+    box-shadow: 0 2px 10px 0 rgba(0,0,0,0.20);  
+}
+
+.group-container-inner:hover{
+    cursor: pointer;
+}
+
+.group-container-inner:nth-child(5n + 1) {
+    margin-left: 0;
+}
+
+
+
