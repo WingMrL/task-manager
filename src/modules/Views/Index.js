@@ -5,8 +5,8 @@ import HeaderContainer from '../Layout/HeaderContainer';
 import ContentContainer from '../Layout/ContentContainer';
 import FooterContainer from '../Layout/FooterContainer';
 
-import { Button } from 'antd';
 import axios from 'axios';
+import config from '../../../config/config';
 
 class Index extends React.Component {
 
@@ -14,8 +14,8 @@ class Index extends React.Component {
         super(props);
     }
 
-    
     componentWillMount() {
+
     }
 
     render() {
