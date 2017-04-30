@@ -49,11 +49,14 @@ app.use(logger('dev'));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
-app.use(express.session({
+app.use(sessions({
   secret: 'TaskManager',
+  saveUninitialized: false, // don't create session until something stored
+	resave: false, //don't save session if unmodified
   store: new mongoStore({
     url: config.dbUrl,
-    collection: 'sessions'
+    collection: 'sessions',
+    touchAfter: 24 * 3600 // time period in seconds
   })
 }));
 var oneYear = 60 * 1000 * 60 * 24 * 365;

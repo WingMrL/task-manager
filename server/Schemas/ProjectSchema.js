@@ -1,15 +1,14 @@
-let mongoose = require('mongoose');
-const Schema = mongoose.Schema
-const ObjectId = Schema.Types.ObjectId
+var mongoose = require('mongoose');
+var Schema = mongoose.Schema;
+var ObjectId = Schema.Types.ObjectId;
 
-let GroupSchema = new Schema({
-  groupName: String,
-  groupEngName: String,
-  groupIconUrl: String,
-  icons: [{
-    type: ObjectId,
-    ref: 'Icon'
-  }],
+var ProjectSchema = new Schema({
+  projectName: String,
+  lists: [],
+  members: [],
+  tasks: [],
+
+  
   meta: {
     createAt: {
       type: Date,
@@ -20,21 +19,20 @@ let GroupSchema = new Schema({
       default: Date.now()
     }
   }
-})
+});
 
-// var ObjectId = mongoose.Schema.Types.ObjectId
-GroupSchema.pre('save', function(next) {
+ProjectSchema.pre('save', function(next) {
+  var user = this;
+
   if (this.isNew) {
     this.meta.createAt = this.meta.updateAt = Date.now()
   }
   else {
     this.meta.updateAt = Date.now()
   }
+});
 
-  next()
-})
-
-GroupSchema.statics = {
+ProjectSchema.statics = {
   fetch: function(cb) {
     return this
       .find({})
@@ -48,4 +46,4 @@ GroupSchema.statics = {
   }
 }
 
-module.exports = GroupSchema;
+module.exports = ProjectSchema;

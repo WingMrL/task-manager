@@ -1,13 +1,16 @@
-let mongoose = require('mongoose');
-const Schema = mongoose.Schema
-const ObjectId = Schema.Types.ObjectId
+var mongoose = require('mongoose');
+var Schema = mongoose.Schema;
+var ObjectId = Schema.Types.ObjectId;
 
-let LabelSchema = new Schema({
-  labelName: String,
-  icons: [{
+var TeamSchema = new Schema({
+  teamName: String,
+  projects: [{
     type: ObjectId,
-    ref: 'Icon',
+    ref: 'ProjectModal'
   }],
+  superManager: {},
+  Manager: [],
+  normalUsers: [],
   meta: {
     createAt: {
       type: Date,
@@ -18,21 +21,20 @@ let LabelSchema = new Schema({
       default: Date.now()
     }
   }
-})
+});
 
-// var ObjectId = mongoose.Schema.Types.ObjectId
-LabelSchema.pre('save', function(next) {
+TeamSchema.pre('save', function(next) {
+  var user = this;
+
   if (this.isNew) {
     this.meta.createAt = this.meta.updateAt = Date.now()
   }
   else {
     this.meta.updateAt = Date.now()
   }
+});
 
-  next()
-})
-
-LabelSchema.statics = {
+TeamSchema.statics = {
   fetch: function(cb) {
     return this
       .find({})
@@ -43,14 +45,7 @@ LabelSchema.statics = {
     return this
       .findOne({_id: id})
       .exec(cb)
-  },
-  findByLabelName: function(name, cb) {
-    return this
-      .findOne({labelName: name})
-      .exec(cb);
   }
 }
 
-LabelSchema.index({ labelName: "text" });
-
-module.exports =  LabelSchema;
+module.exports = TeamSchema;

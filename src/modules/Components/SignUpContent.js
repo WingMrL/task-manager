@@ -5,7 +5,8 @@ const FormItem = Form.Item;
 import { Link } from 'react-router-dom';
 import './SignUpContent.less';
 import logo from '../../assets/images/index/task-manager.png';
-// import '../../assets/style.less';
+import axios from 'axios';
+import config from '../../../config/config';
 
 class SignUpContent extends React.Component {
 
@@ -14,6 +15,13 @@ class SignUpContent extends React.Component {
         this.props.form.validateFields((err, values) => {
             if (!err) {
                 console.log('Received values of form: ', values);
+                axios.post(`${config.serverHost}/api/user/signup`, {
+                    user: values
+                }).then((result) => {
+                    console.log(result);
+                }).catch((err) => {
+                    console.log(err);
+                });
             }
         });
     }
@@ -51,7 +59,7 @@ class SignUpContent extends React.Component {
                                 required: true, 
                                 message: '请输入你常用的邮箱地址!' 
                             }, {
-                                pattern: /^[A-Za-zd]+([-_.][A-Za-zd]+)*@([A-Za-zd]+[-.])+[A-Za-zd]{2,5}$/,
+                                pattern: /^[a-zA-Z0-9_-]+@[a-zA-Z0-9_-]+(\.[a-zA-Z0-9_-]+)+$/,
                                 message: '请输入正确的邮箱地址!',
                             }],
                         })(
