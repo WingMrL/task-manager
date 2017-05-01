@@ -1,15 +1,22 @@
 var mongoose = require('mongoose');
-var bcrypt = require('bcrypt');
-var SALT_WORK_FACTOR = 10;
+var Schema = mongoose.Schema;
+var ObjectId = Schema.Types.ObjectId;
 
-var UserSchema = new mongoose.Schema({
+var TaskSchema = new Schema({
   name: String,
   description: String,
   finished: {
     type: Boolean,
     default: false,
   },
-  
+  executor: {
+    type: ObjectId,
+    ref: 'UserModal'
+  },
+  comments: {
+    type: ObjectId,
+    ref: 'CommentModal'
+  },
   meta: {
     createAt: {
       type: Date,
@@ -22,8 +29,7 @@ var UserSchema = new mongoose.Schema({
   }
 });
 
-UserSchema.pre('save', function(next) {
-  var user = this;
+TaskSchema.pre('save', function(next) {
 
   if (this.isNew) {
     this.meta.createAt = this.meta.updateAt = Date.now()
@@ -31,30 +37,9 @@ UserSchema.pre('save', function(next) {
   else {
     this.meta.updateAt = Date.now()
   }
-
-  bcrypt.genSalt(SALT_WORK_FACTOR, function(err, salt) {
-    if (err) return next(err)
-
-    bcrypt.hash(user.password, salt, function(err, hash) {
-      if (err) return next(err)
-
-      user.password = hash;
-      next();
-    })
-  })
 });
 
-UserSchema.methods = {
-  comparePassword: function(_password, cb) {
-    bcrypt.compare(_password, this.password, function(err, isMatch) {
-      if (err) return cb(err)
-
-      cb(null, isMatch)
-    })
-  }
-}
-
-UserSchema.statics = {
+TaskSchema.statics = {
   fetch: function(cb) {
     return this
       .find({})
@@ -68,4 +53,4 @@ UserSchema.statics = {
   }
 }
 
-module.exports = UserSchema;
+module.exports = TaskSchema;

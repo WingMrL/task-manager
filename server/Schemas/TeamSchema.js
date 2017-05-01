@@ -8,9 +8,18 @@ var TeamSchema = new Schema({
     type: ObjectId,
     ref: 'ProjectModal'
   }],
-  superManager: {},
-  Manager: [],
-  normalUsers: [],
+  superManager: {
+    type: ObjectId,
+    ref: 'UserSchema'
+  },
+  Manager: [{
+    type: ObjectId,
+    ref: 'UserSchema'
+  }],
+  normalUsers: [{
+    type: ObjectId,
+    ref: 'UserSchema'
+  }],
   meta: {
     createAt: {
       type: Date,
@@ -24,7 +33,6 @@ var TeamSchema = new Schema({
 });
 
 TeamSchema.pre('save', function(next) {
-  var user = this;
 
   if (this.isNew) {
     this.meta.createAt = this.meta.updateAt = Date.now()

@@ -2,27 +2,11 @@ var mongoose = require('mongoose');
 var Schema = mongoose.Schema;
 var ObjectId = Schema.Types.ObjectId;
 
-var ProjectSchema = new Schema({
-  projectName: String,
-  description: {
-    type: String,
-    default: ''
-  },
-  archive: {
-    type: Boolean,
-    default: false,
-  },
-  teams: {
+var ListSchema = new Schema({
+  listName: String,
+  tasks: [{
     type: ObjectId,
-    ref: 'TeamModal'
-  },
-  members: [{
-    type: ObjectId,
-    ref: 'UserModal'
-  }],
-  lists: [{
-    type: ObjectId,
-    ref: 'ListModal'
+    ref: 'TaskModal'
   }],
   meta: {
     createAt: {
@@ -36,7 +20,7 @@ var ProjectSchema = new Schema({
   }
 });
 
-ProjectSchema.pre('save', function(next) {
+ListSchema.pre('save', function(next) {
 
   if (this.isNew) {
     this.meta.createAt = this.meta.updateAt = Date.now()
@@ -46,7 +30,7 @@ ProjectSchema.pre('save', function(next) {
   }
 });
 
-ProjectSchema.statics = {
+ListSchema.statics = {
   fetch: function(cb) {
     return this
       .find({})
@@ -60,4 +44,4 @@ ProjectSchema.statics = {
   }
 }
 
-module.exports = ProjectSchema;
+module.exports = ListSchema;

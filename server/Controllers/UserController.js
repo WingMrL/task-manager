@@ -1,34 +1,39 @@
 var mongoose = require('mongoose')
 var UserModal = mongoose.model('UserModal');
 
+// code: 0, msg: ok
+// code: 1, msg: eMail has been used
+
 exports.signup = function(req, res) {
   var _user = req.body.user;
   console.log(_user);
-  res.json({
-    code: 0,
-    msg: 'ok',
-  });
+  
 
 
-  // User.findOne({name: _user.name},  function(err, user) {
-  //   if (err) {
-  //     console.log(err)
-  //   }
+  User.findOne({eMail: _user.eMail},  function(err, user) {
+    if (err) {
+      console.log(err)
+    }
 
-  //   if (user) {
-  //     return res.redirect('/signin')
-  //   }
-  //   else {
-  //     user = new User(_user)
-  //     user.save(function(err, user) {
-  //       if (err) {
-  //         console.log(err)
-  //       }
+    if (user) {
+      res.json({
+        code: 1,
+        msg: 'eMail has been used',
+      });
+    }
+    else {
 
-  //       res.redirect('/')
-  //     })
-  //   }
-  // })
+      
+      user = new User(_user)
+      user.save(function(err, user) {
+        if (err) {
+          console.log(err)
+        }
+
+        res.redirect('/')
+      })
+    }
+  })
 }
 
 // signin
