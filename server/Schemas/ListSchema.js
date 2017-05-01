@@ -28,6 +28,8 @@ ListSchema.pre('save', function(next) {
   else {
     this.meta.updateAt = Date.now()
   }
+
+  next();
 });
 
 ListSchema.statics = {

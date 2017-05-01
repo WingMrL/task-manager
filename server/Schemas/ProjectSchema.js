@@ -44,6 +44,8 @@ ProjectSchema.pre('save', function(next) {
   else {
     this.meta.updateAt = Date.now()
   }
+
+  next();
 });
 
 ProjectSchema.statics = {

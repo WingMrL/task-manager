@@ -1,6 +1,6 @@
 import React from 'react';
 
-import { Form, Icon, Input, Button, Checkbox } from 'antd';
+import { Form, Icon, Input, Button, Checkbox, message } from 'antd';
 const FormItem = Form.Item;
 import { Link } from 'react-router-dom';
 import './SignUpContent.less';
@@ -14,11 +14,15 @@ class SignUpContent extends React.Component {
         e.preventDefault();
         this.props.form.validateFields((err, values) => {
             if (!err) {
-                console.log('Received values of form: ', values);
+                // console.log('Received values of form: ', values);
                 axios.post(`${config.serverHost}/api/user/signup`, {
                     user: values
                 }).then((result) => {
-                    console.log(result);
+                    if(result.data.code == 0) {
+                        
+                    } else if(result.data.code == 1) {
+                        message.error(`该邮箱已注册!`);
+                    }
                 }).catch((err) => {
                     console.log(err);
                 });

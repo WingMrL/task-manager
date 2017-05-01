@@ -37,6 +37,8 @@ TaskSchema.pre('save', function(next) {
   else {
     this.meta.updateAt = Date.now()
   }
+
+  next();
 });
 
 TaskSchema.statics = {

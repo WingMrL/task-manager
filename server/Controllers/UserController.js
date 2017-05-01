@@ -1,71 +1,110 @@
-var mongoose = require('mongoose')
-var UserModal = mongoose.model('UserModal');
+let mongoose = require('mongoose')
+let UserModal = mongoose.model('UserModal');
+let TeamModal = mongoose.model('TeamModal');
+let path = require('path');
 
 // code: 0, msg: ok
 // code: 1, msg: eMail has been used
+// code: -1, msg: params error
+// code: -2, msg: eMail not sign up
+// code: -3, msg: passwork or eMail not match
 
+// sign up
 exports.signup = function(req, res) {
-  var _user = req.body.user;
-  console.log(_user);
-  
+  let {userName, password, eMail, teamName} = req.body.user;
+  let _user = {
+    userName,
+    password,
+    eMail,
+  };
+  // console.log(_user);
 
+  UserModal.findOne({eMail: _user.eMail})
+      .exec()
+      .then((foundUser) => {
+        if(foundUser) {
+            res.json({
+              code: 1,
+              msg: 'eMail has been used',
+            });
+        } else {
+            _user.headImgUrl = path.join('headimg', 'default.png');
 
-  User.findOne({eMail: _user.eMail},  function(err, user) {
-    if (err) {
-      console.log(err)
-    }
+            let user = new UserModal(_user);
+            user.save()
+                .then((savedUser) => {
 
-    if (user) {
-      res.json({
-        code: 1,
-        msg: 'eMail has been used',
-      });
-    }
-    else {
+                  let _team = {
+                    teamName,
+                    superManager: savedUser._id
+                  };
 
-      
-      user = new User(_user)
-      user.save(function(err, user) {
-        if (err) {
-          console.log(err)
+                  let team = new TeamModal(_team);
+                  // console.log(team);
+                  team.save()
+                      .then((savedTeam) => {
+                        savedUser.teams = [savedTeam._id];
+                        savedUser.save()
+                            .then(() => {
+                              res.json({
+                                code: 0,
+                                msg: 'ok',
+                              });
+                            })
+                            .catch((err) => {
+                              console.log(err);
+                            });
+                      })
+                      .catch((err) => {
+                        console.log(err);
+                      });
+                })
+                .catch((err) => {
+                    console.log(err)
+                });
         }
-
-        res.redirect('/')
       })
-    }
-  })
+      .catch((err) => {
+        console.log(err);
+      });
 }
 
-// signin
+// sign in
 exports.signin = function(req, res) {
-  var _user = req.body.user
-  var name = _user.name
-  var password = _user.password
+  let { eMail, password, remember } = req.body.user;
 
-  User.findOne({name: name}, function(err, user) {
-    if (err) {
-      console.log(err)
-    }
+  UserModal.findOne({eMail: eMail})
+      .exec()
+      .then((foundUser) => {
+          if (!foundUser) {
+              res.json({
+                  code: -2,
+                  msg: 'eMail not sign up'
+              });
+          } else {
+              foundUser.comparePassword(password, (err, isMatch) => {
+                  if (err) {
+                    console.log(err)
+                  }
 
-    if (!user) {
-      return res.redirect('/signup')
-    }
-
-    user.comparePassword(password, function(err, isMatch) {
-      if (err) {
-        console.log(err)
-      }
-
-      if (isMatch) {
-        req.session.user = user
-
-        return res.redirect('/')
-      }
-      else {
-        return res.redirect('/signin')
-      }
-    })
-  })
+                  if (isMatch) {
+                    req.session.user = foundUser;
+                    res.json({
+                        code: 0,
+                        msg: 'ok'
+                    });
+                  } else {
+                    res.json({
+                        code: -3,
+                        msg: 'passwork or eMail not match'
+                    });
+                  }
+              })
+          }
+      })
+      .catch((err) => {
+          console.log(err)
+      });
 }
 
 // logout
