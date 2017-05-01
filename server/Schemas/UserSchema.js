@@ -11,7 +11,10 @@ var UserSchema = new Schema({
   },
   password: String,
   headImgUrl: String,
-  eMail: String,
+  eMail: {
+    unique: true,
+    type: String,
+  },
   teams: [{
     type: ObjectId,
     ref: 'TeamModal'

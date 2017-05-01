@@ -4,11 +4,21 @@ var ObjectId = Schema.Types.ObjectId;
 
 var ProjectSchema = new Schema({
   projectName: String,
+  description: {
+    type: String,
+    default: ''
+  },
+  archive: {
+    type: Boolean,
+    default: false,
+  },
+  teams: {
+    type: object,
+    ref: 'TeamModal'
+  },
   lists: [],
   members: [],
   tasks: [],
-
-  
   meta: {
     createAt: {
       type: Date,
