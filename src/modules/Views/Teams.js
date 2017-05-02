@@ -7,17 +7,21 @@ import FooterContainer from '../Layout/FooterContainer';
 
 import axios from 'axios';
 import config from '../../../config/config';
+import TeamHeaderContent from '../Components/Header/TeamHeaderContent';
+import TeamContent from '../Components/Content/TeamContent';
 import Footer from '../Components/Footer/Footer';
-import SignInContent from '../Components/Content/SignInContent';
 
-class Index extends React.Component {
+import { addUser } from '../../actions/userActions';
+import { connect } from 'react-redux';
+
+class Teams extends React.Component {
 
     constructor(props) {
         super(props);
     }
 
     componentWillMount() {
-
+        
     }
 
     render() {
@@ -25,9 +29,10 @@ class Index extends React.Component {
         return (
             <LayoutMain>
                 <HeaderContainer>
+                    <TeamHeaderContent history={history}/>
                 </HeaderContainer>
                 <ContentContainer>
-                    <SignInContent history={history}/>
+                    <TeamContent history={history}/>
                 </ContentContainer>
                 <FooterContainer>
                     <Footer />
@@ -37,4 +42,6 @@ class Index extends React.Component {
     }
 }
 
-export default Index;
+Teams = connect()(Teams);
+
+export default Teams;

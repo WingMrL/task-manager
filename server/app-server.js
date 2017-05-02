@@ -1,8 +1,8 @@
 var express = require('express');
 var path = require('path');
 var favicon = require('serve-favicon');
-var sessions = require('express-session');
-var mongoStore = require('connect-mongo')(sessions);
+// var session = require('express-session');
+// var mongoStore = require('connect-mongo')(session);
 var mongoose = require('mongoose');
 
 var logger = require('morgan');
@@ -12,6 +12,7 @@ var ejs = require('ejs');
 var fs = require('fs');
 var config = require('../config/config');
 
+mongoose.Promise = global.Promise;
 mongoose.connect(config.dbUrl);
 
 // models loading
@@ -45,20 +46,26 @@ app.set('view engine', 'html');
 
 // uncomment after placing your favicon in /public
 //app.use(favicon(path.join(__dirname, 'public', 'favicon.ico')));
+
 app.use(logger('dev'));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
-app.use(sessions({
-  secret: 'TaskManager',
-  saveUninitialized: false, // don't create session until something stored
-	resave: false, //don't save session if unmodified
-  store: new mongoStore({
-    url: config.dbUrl,
-    collection: 'sessions',
-    touchAfter: 24 * 3600 // time period in seconds
-  })
-}));
+
+// app.use(session({
+//   secret: 'TaskManager',
+//   saveUninitialized: false, 
+// 	resave: false, 
+//   store: new mongoStore({
+//     url: config.dbUrl,
+//     collection: 'sessions',
+//     touchAfter: 24 * 3600 // time period in seconds
+//   }),
+//   cookie: {
+//     secure: false
+//   }
+// }));
+
 var oneYear = 60 * 1000 * 60 * 24 * 365;
 app.use(express.static(path.join(__dirname, '..', 'dist'), {maxAge: oneYear}));
 app.use(express.static(path.join(__dirname, '..', 'dist', 'upload'), {maxAge: oneYear}));
@@ -71,6 +78,7 @@ app.all('*', function(req, res, next) {
     // res.header("Access-Control-Allow-Headers", "Content-Type");
     // res.header("Access-Control-Allow-Headers", "*");
     res.header("Access-Control-Allow-Methods","PUT,POST,GET,DELETE,OPTIONS");
+    // res.header("Access-Control-Allow-Credentials: true");
     // res.header("X-Powered-By",' 3.2.1');
     // res.header("Content-Type", "application/json;charset=utf-8");
     if(req.method == 'OPTIONS') {

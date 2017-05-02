@@ -4,6 +4,7 @@ var ObjectId = Schema.Types.ObjectId;
 
 var ProjectSchema = new Schema({
   projectName: String,
+  projectLogoUrl: String,
   description: {
     type: String,
     default: ''

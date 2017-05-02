@@ -2,12 +2,15 @@ let mongoose = require('mongoose')
 let UserModal = mongoose.model('UserModal');
 let TeamModal = mongoose.model('TeamModal');
 let path = require('path');
+let jwt = require('jsonwebtoken');
+let config = require('../../config/config');
 
 // code: 0, msg: ok
 // code: 1, msg: eMail has been used
 // code: -1, msg: params error
 // code: -2, msg: eMail not sign up
 // code: -3, msg: passwork or eMail not match
+// code: -98, msg: need signin
 
 // sign up
 exports.signup = function(req, res) {
@@ -45,10 +48,13 @@ exports.signup = function(req, res) {
                       .then((savedTeam) => {
                         savedUser.teams = [savedTeam._id];
                         savedUser.save()
-                            .then(() => {
+                            .then((savedUser02) => {
+                              let token = jwt.sign(savedUser02, config.secret, {expiresIn: 24 * 3600}); 
                               res.json({
                                 code: 0,
                                 msg: 'ok',
+                                token,
+                                user: savedUser02
                               });
                             })
                             .catch((err) => {
@@ -88,10 +94,13 @@ exports.signin = function(req, res) {
                   }
 
                   if (isMatch) {
-                    req.session.user = foundUser;
+                    let token = jwt.sign(foundUser, config.secret, {expiresIn: 24 * 3600});                    
+
                     res.json({
                         code: 0,
-                        msg: 'ok'
+                        msg: 'ok',
+                        token,
+                        user: foundUser,
                     });
                   } else {
                     res.json({
@@ -107,45 +116,91 @@ exports.signin = function(req, res) {
       });
 }
 
+exports.getUser = function(req, res) {
+  let { userId } = req.query;
+  let options = {
+      sort: {
+          'meta.updateAt': -1
+      }
+  }
+  if(userId) {
+    // console.log(userId);
+    UserModal.findOne({_id: userId})
+      .populate({
+        path: 'teams', 
+        options
+      })
+      .exec()
+      .then((foundUser) => {
+          res.json({
+              code: 0,
+              msg: 'ok',
+              user: foundUser,
+          });
+      })
+      .catch((err) => {
+          console.log(err);
+      });
+  } else {
+    res.json({
+      code: -1,
+      msg: 'params error'
+    });
+  }
+};
+
 // logout
 exports.logout =  function(req, res) {
-  delete req.session.user
+  // delete req.session.user
   //delete app.locals.user
 
-  res.redirect('/')
+  // res.redirect('/')
 }
 
-// userlist page
-exports.list = function(req, res) {
-  User.fetch(function(err, users) {
-    if (err) {
-      console.log(err)
-    }
-
-    res.render('userlist', {
-      title: 'imooc 用户列表页',
-      users: users
-    })
-  })
-}
 
 // midware for user
 exports.signinRequired = function(req, res, next) {
-  var user = req.session.user
-
-  if (!user) {
-    return res.redirect('/signin')
+  let token = req.body.token || req.query.token || req.headers['x-access-token'];
+  if(token) {
+    jwt.verify(token, config.secret, (err, decoded) => {
+      if(err) {
+          res.json({
+              code: -98,
+              msg: 'need signin'
+          });
+      } else {
+          next();
+      }
+    });
+  } else {
+    res.json({
+      code: -98,
+      msg: 'need signin'
+    });
   }
-
-  next()
 }
 
-exports.adminRequired = function(req, res, next) {
-  var user = req.session.user
-
-  if (user.role <= 10) {
-    return res.redirect('/signin')
+exports.checkSignIn = function(req, res, next) {
+  let token = req.body.token || req.query.token || req.headers['x-access-token'];
+  if(token) {
+    jwt.verify(token, config.secret, (err, decoded) => {
+      if(err) {
+          res.json({
+              code: -98,
+              msg: 'need signin'
+          });
+      } else {
+          res.json({
+              code: 0,
+              msg: 'ok',
+              token
+          });
+      }
+    });
+  } else {
+    res.json({
+      code: -98,
+      msg: 'need signin'
+    });
   }
-
-  next()
 }

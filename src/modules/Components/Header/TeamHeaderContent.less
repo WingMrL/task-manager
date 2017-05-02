@@ -1,0 +1,36 @@
+.custom-bg-img-style-contain {
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: center;
+}
+
+.custom-bg-img-style-cover {
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-position: center;
+}
+
+.custom-ant-layout-header {
+.header-container {
+.team-header-content-container {
+    width: 1100px;
+    height: 100px;
+    display: flex;
+    justify-content: space-between;
+
+    .tm-logo {
+        background-image: url('../../../assets/images/header/TM.png');
+        &:extend(.custom-bg-img-style-contain);
+        display: block;
+        width: 100px;
+        height: 100px;
+    }
+
+    .user-container {
+        .username {
+            margin-right: 10px;
+        }
+    }
+}
+}
+}

@@ -3,14 +3,17 @@ import React from 'react';
 import { Form, Icon, Input, Button, Checkbox, message } from 'antd';
 const FormItem = Form.Item;
 import { Link } from 'react-router-dom';
+import { connect } from 'react-redux';
 import './SignUpContent.less';
-import logo from '../../assets/images/index/task-manager.png';
+import logo from '../../../assets/images/index/task-manager.png';
 import axios from 'axios';
-import config from '../../../config/config';
+import config from '../../../../config/config';
+import { signIn } from '../../../actions/hasSignInActions';
 
 class SignUpContent extends React.Component {
 
     handleSubmit = (e) => {
+        let { history, dispatch } = this.props;
         e.preventDefault();
         this.props.form.validateFields((err, values) => {
             if (!err) {
@@ -19,7 +22,12 @@ class SignUpContent extends React.Component {
                     user: values
                 }).then((result) => {
                     if(result.data.code == 0) {
-                        
+                        // console.log(result.data);
+                        // history.push(`/teams`);
+                        localStorage.setItem('token', result.data.token);
+                        localStorage.setItem('userId', result.data.user._id);
+                        dispatch(signIn());
+                        history.push(`/teams`);
                     } else if(result.data.code == 1) {
                         message.error(`该邮箱已注册!`);
                     }
@@ -115,5 +123,6 @@ class SignUpContent extends React.Component {
 }
 
 SignUpContent = Form.create()(SignUpContent);
+SignUpContent = connect()(SignUpContent);
 
 export default SignUpContent;

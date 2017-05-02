@@ -7,8 +7,8 @@ import FooterContainer from '../Layout/FooterContainer';
 
 import axios from 'axios';
 import config from '../../../config/config';
-import Footer from '../Components/Footer';
-import SignUpContent from '../Components/SignUpContent';
+import Footer from '../Components/Footer/Footer';
+import SignUpContent from '../Components/Content/SignUpContent';
 
 class Index extends React.Component {
 
@@ -21,12 +21,13 @@ class Index extends React.Component {
     }
 
     render() {
+        let { history } = this.props;
         return (
             <LayoutMain>
                 <HeaderContainer>
                 </HeaderContainer>
                 <ContentContainer>
-                    <SignUpContent />
+                    <SignUpContent history={history}/>
                 </ContentContainer>
                 <FooterContainer>
                     <Footer />

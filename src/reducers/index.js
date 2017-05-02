@@ -1,10 +1,13 @@
 import { combineReducers } from 'redux';
-import icons from './icons';
-import selectedIcons from './selectedIcons';
+import hasSignIn from './hasSignInReducer';
+import user from './userReducer';
+import currentTeam from './currentTeamReducer';
 
-const iconLibraryApp = combineReducers({
-  icons,
-  selectedIcons,
+
+const TaskManagerApp = combineReducers({
+  hasSignIn,
+  user,
+  currentTeam,
 });
 
-export default iconLibraryApp;
+export default TaskManagerApp;

@@ -2,23 +2,23 @@ import React from 'react';
 
 import { Button } from 'antd';
 import { Link } from 'react-router-dom';
+import { connect } from 'react-redux';
 import './HomePage.less';
-import logo from '../../assets/images/index/task-manager.png';
-import '../../assets/style.less';
+import logo from '../../../assets/images/index/task-manager.png';
+import '../../../assets/style.less';
 
 class HomePage extends React.Component {
 
     render() {
 
-        const logined = false;
-
+        const { hasSignIn } = this.props;
         return (
             <div className={`homepage-container`}>
                 <img src={logo} alt='logo' className={`img-logo`}/>
                 <h2 className={`h2-your-office`}>你 的 网 上 办 公 室</h2>
                 <p className={`p-task-manager-system`}>基 于 Web 的 多 人协 作 项 目 管 理  系 统</p>
 
-                { logined ? 
+                { hasSignIn ? 
                     <div className={'link-container'}>
                         <Link to={`/teams`}>
                             <Button size="large" type="primary">
@@ -42,5 +42,14 @@ class HomePage extends React.Component {
         );
     }
 }
+
+const mapStateToProps = (state, ownProps) => {
+    const { hasSignIn } = state;
+    return {
+        hasSignIn
+    }
+};
+
+HomePage = connect(mapStateToProps)(HomePage);
 
 export default HomePage;
