@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 import { connect } from 'react-redux';
 import { logOut } from '../../../actions/hasSignInActions';
 import { removeUser } from '../../../actions/userActions';
+import { removeCurrentTeam } from '../../../actions/currentTeamActions';
 
 class UserName extends React.Component {
 
@@ -11,6 +12,7 @@ class UserName extends React.Component {
         let { dispatch } = this.props;
         dispatch(logOut());
         dispatch(removeUser());
+        dispatch(removeCurrentTeam());
         localStorage.removeItem('token');
         localStorage.removeItem('userId');
     }

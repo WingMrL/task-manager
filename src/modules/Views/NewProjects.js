@@ -8,9 +8,9 @@ import FooterContainer from '../Layout/FooterContainer';
 import Footer from '../Components/Footer/Footer';
 
 import CommonHeaderContent  from '../Components/Header/CommonHeaderContent';
-import ProjectsContent from '../Components/Content/ProjectsContent';
+import NewProjectsContent from '../Components/Content/NewProjectsContent';
 
-class Projects extends React.Component {
+class NewProjects extends React.Component {
 
     constructor(props) {
         super(props);
@@ -19,7 +19,6 @@ class Projects extends React.Component {
     render() {
         const { history } = this.props;
         const { teamId } = this.props.match.params;
-        // console.log(history);
         return (
             <LayoutMain>
                 <HeaderContainer>
@@ -30,7 +29,7 @@ class Projects extends React.Component {
                         />
                 </HeaderContainer>
                 <ContentContainer>
-                    <ProjectsContent />
+                    <NewProjectsContent />
                 </ContentContainer>
                 <FooterContainer>
                     <Footer />
@@ -40,4 +39,4 @@ class Projects extends React.Component {
     }
 }
 
-export default Projects;
+export default NewProjects;

@@ -19,18 +19,40 @@
     justify-content: space-between;
     align-items: center;
     
-    .dropdown-text-team {
+    .dropdown-text-team,
+    .dropdown-user {
         height: 50px;
         line-height: 50px;
         font-size: 24px;
         color: #71a7ce;
+        display: flex;
+        align-items: center;
 
         .anticon-caret-down {
             font-size: 12px;
-            position: relative;
-            top: -5px;
-            left: 5px;
-            
+            margin-left: 4px;
+        }
+
+        .head-img {
+            width: 40px;
+            height: 40px;
+            display: inline-block;
+            border-radius: 100%;
+        }
+    }
+
+    .nav-main-menu {
+        background-color: transparent;
+        border-bottom: 0;
+        font-size: 16px;
+        color: #71a7ce;
+
+        .ant-menu-item a {
+            display: inline-block;
+        }
+
+        .ant-menu-item-selected a {
+            color: #108ee9;
         }
     }
 }
@@ -63,6 +85,21 @@
     }
 
     .team-manager-and-add {
+        font-weight: 300;
+    }
+}
+
+.dropdown-menu-user {
+    .ant-dropdown-menu-item {
+        font-size: 16px;
+
+        a {
+            padding: 4px 16px;
+            color: #71a7ce;
+        }
+    }
+
+    .log-out {
         font-weight: 300;
     }
 }

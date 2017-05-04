@@ -4,6 +4,7 @@ let TeamModal = mongoose.model('TeamModal');
 let path = require('path');
 let jwt = require('jsonwebtoken');
 let config = require('../../config/config');
+let uuidV1 = require('uuid/v1');
 
 // code: 0, msg: ok
 // code: 1, msg: eMail has been used
@@ -36,10 +37,11 @@ exports.signup = function(req, res) {
             let user = new UserModal(_user);
             user.save()
                 .then((savedUser) => {
-
+                  let joinId = uuidV1();
                   let _team = {
                     teamName,
-                    superManager: savedUser._id
+                    superManager: savedUser._id,
+                    joinId: joinId
                   };
 
                   let team = new TeamModal(_team);

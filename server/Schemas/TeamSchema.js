@@ -4,21 +4,22 @@ var ObjectId = Schema.Types.ObjectId;
 
 var TeamSchema = new Schema({
   teamName: String,
+  joinId: String,
   projects: [{
     type: ObjectId,
     ref: 'ProjectModal'
   }],
   superManager: {
     type: ObjectId,
-    ref: 'UserSchema'
+    ref: 'UserModal'
   },
-  Manager: [{
+  managers: [{
     type: ObjectId,
-    ref: 'UserSchema'
+    ref: 'UserModal'
   }],
-  normalUsers: [{
+  normalMembers: [{
     type: ObjectId,
-    ref: 'UserSchema'
+    ref: 'UserModal'
   }],
   meta: {
     createAt: {

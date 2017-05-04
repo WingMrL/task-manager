@@ -7,33 +7,40 @@ import { Menu, Icon } from 'antd';
 class NavMenu extends React.Component {
 
     render() {
-            
+
+        const { currentTeam, selectedKeys } = this.props;
+        let teamId = '';
+        if(currentTeam) {
+            teamId = currentTeam._id;
+        }
         return (
-            <Dropdown 
-                overlay={menu}
-                trigger={['click']}
+            <Menu
+                mode="horizontal"
+                className={`nav-main-menu`}
+                selectedKeys={selectedKeys}
                 >
-                <a
-                    className={`dropdown-text-team`}
-                    >
-                    {teamName}
-                    <Icon type="caret-down"/>
-                </a>
-            </Dropdown>
+                <Menu.Item key={`projects`}>
+                    <Icon type="folder-open" />
+                    <Link to={`/teams/${teamId}/projects`}>项目</Link>
+                </Menu.Item>
+                <Menu.Item key={`teams`}>
+                    <Icon type="team" />
+                    <Link to={`/teams/${teamId}/members`}>团队</Link>
+                </Menu.Item>
+            </Menu>
         );
     }
 };
 
-// const mapStateToProps = (state, ownProps) => {
-//     const { user, currentTeam } = state;
-//     return {
-//         currentTeam,
-//         user,
-//         ...ownProps
-//     };
-// };
+const mapStateToProps = (state, ownProps) => {
+    const { currentTeam } = state;
+    return {
+        currentTeam,
+        ...ownProps
+    };
+};
 
-NavMenu = connect()(NavMenu);
+NavMenu = connect(mapStateToProps)(NavMenu);
 
 export default NavMenu;
 

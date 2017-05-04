@@ -19,7 +19,7 @@ class TeamsContent extends React.Component {
     }
     
     componentWillMount() {
-        const { user, hasSignIn, history, dispatch } = this.props;
+        const { user, history, dispatch } = this.props;
         const token = localStorage.getItem('token');
         const userId = localStorage.getItem('userId');
         if(token === null || userId === null) {
@@ -151,10 +151,9 @@ class TeamsContent extends React.Component {
 }
 
 const mapStateToProps = (state, ownProps) => {
-    const { user, hasSignIn } = state;
+    const { user } = state;
     return {
         user,
-        hasSignIn,
         ...ownProps,
     };
 };

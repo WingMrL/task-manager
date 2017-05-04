@@ -8,9 +8,9 @@ import FooterContainer from '../Layout/FooterContainer';
 import Footer from '../Components/Footer/Footer';
 
 import CommonHeaderContent  from '../Components/Header/CommonHeaderContent';
-import ProjectsContent from '../Components/Content/ProjectsContent';
+import MembersContent from '../Components/Content/MembersContent';
 
-class Projects extends React.Component {
+class Members extends React.Component {
 
     constructor(props) {
         super(props);
@@ -19,18 +19,17 @@ class Projects extends React.Component {
     render() {
         const { history } = this.props;
         const { teamId } = this.props.match.params;
-        // console.log(history);
         return (
             <LayoutMain>
                 <HeaderContainer>
                     <CommonHeaderContent 
                         history={history}
                         teamId={teamId}
-                        selectedKeys={['projects']}
+                        selectedKeys={['teams']}
                         />
                 </HeaderContainer>
                 <ContentContainer>
-                    <ProjectsContent />
+                    <MembersContent />
                 </ContentContainer>
                 <FooterContainer>
                     <Footer />
@@ -40,4 +39,4 @@ class Projects extends React.Component {
     }
 }
 
-export default Projects;
+export default Members;

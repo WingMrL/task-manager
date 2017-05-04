@@ -4,6 +4,7 @@ let TeamModal = mongoose.model('TeamModal');
 let path = require('path');
 let jwt = require('jsonwebtoken');
 let config = require('../../config/config');
+let uuidV1 = require('uuid/v1');
 
 // code: 0, msg: ok
 // code: 1, msg: eMail has been used
@@ -16,9 +17,11 @@ let config = require('../../config/config');
 exports.newTeam = function(req, res) {
     let { teamName, userId } = req.body;
     // console.log(teamName, userId);
+    let joinId = uuidV1();
     let team = new TeamModal({ 
         teamName,
-        superManager: userId 
+        superManager: userId,
+        joinId: joinId
       });
     team.save()
         .then((savedTeam) => {
@@ -56,9 +59,31 @@ exports.getTeam = function(req, res) {
             }
         }
     };
+    let populateSuperManager = {
+        path: 'superManager'
+    };
+    let populateManagers = {
+        path: 'managers',
+        options: {
+            sort: {
+                'meta.updateAt': -1
+            }
+        }
+    };
+    let populateNormalMembers = {
+        path: 'normalMembers',
+        options: {
+            sort: {
+                'meta.updateAt': -1
+            }
+        }
+    };
     if(teamId) {
         TeamModal.findOne({ _id: teamId })
             .populate(populateProject)
+            .populate(populateSuperManager)
+            .populate(populateManagers)
+            .populate(populateNormalMembers)
             .exec()
             .then((foundTeam) => {
                 res.json({
