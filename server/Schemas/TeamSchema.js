@@ -21,6 +21,10 @@ var TeamSchema = new Schema({
     type: ObjectId,
     ref: 'UserModal'
   }],
+  applies: [{
+    type: ObjectId,
+    ref: 'ApplyModal',
+  }],
   meta: {
     createAt: {
       type: Date,

@@ -17,14 +17,14 @@ class InviteNewMemberContent extends React.Component {
 
     handleResetInviteLink = (e) => {
         e.preventDefault();
-        
+        console.log('此功能还没有实现');
     }
 
     render() {
         const { currentTeam } = this.props;
         let inviteLink = '';
         if(currentTeam) {
-            inviteLink = `${config.serverHost}/join/${currentTeam.joinId}`
+            inviteLink = `${config.serverHost}/join?t=${currentTeam.joinId}`
         }
         return (
             <div className={`invite-new-member-content-container`}>

@@ -11,6 +11,8 @@ let uuidV1 = require('uuid/v1');
 // code: -1, msg: params error
 // code: -2, msg: eMail not sign up
 // code: -3, msg: passwork or eMail not match
+// code: -4, msg: not found
+// code: -5, msg: already in
 // code: -98, msg: need signin
 
 // newTeam
@@ -78,12 +80,24 @@ exports.getTeam = function(req, res) {
             }
         }
     };
+    let populateApplies = {
+        path: 'applies',
+        options: {
+            sort: {
+                'meta.updateAt': -1
+            }
+        },
+        populate: {
+            path: 'applyingUser applyingTeam'
+        }
+    };
     if(teamId) {
         TeamModal.findOne({ _id: teamId })
             .populate(populateProject)
             .populate(populateSuperManager)
             .populate(populateManagers)
             .populate(populateNormalMembers)
+            .populate(populateApplies)
             .exec()
             .then((foundTeam) => {
                 res.json({
@@ -91,6 +105,80 @@ exports.getTeam = function(req, res) {
                     msg: 'ok',
                     team: foundTeam
                 });
+            })
+            .catch((err) => {
+                console.log(err);
+            });
+    } else {
+        res.json({
+            code: -1,
+            msg: 'params error',
+        });
+    }
+    
+};
+
+exports.getTeamByJoinId = function(req, res) {
+    let { joinId, userId } = req.query;
+    let populateProject = {
+        path: 'projects',
+        options: {
+            sort: {
+                'meta.updateAt': -1
+            }
+        }
+    };
+    let populateSuperManager = {
+        path: 'superManager'
+    };
+    let populateManagers = {
+        path: 'managers',
+        options: {
+            sort: {
+                'meta.updateAt': -1
+            }
+        }
+    };
+    let populateNormalMembers = {
+        path: 'normalMembers',
+        options: {
+            sort: {
+                'meta.updateAt': -1
+            }
+        }
+    };
+    if(joinId) {
+        TeamModal.findOne({ joinId: joinId })
+            .populate(populateProject)
+            .populate(populateSuperManager)
+            .populate(populateManagers)
+            .populate(populateNormalMembers)
+            .exec()
+            .then((foundTeam) => {
+                if(foundTeam) {
+                    if(userId && (
+                        userId == foundTeam.superManager._id ||
+                        foundTeam.normalMembers.filter(v => v._id == userId).length > 0 ||
+                        foundTeam.managers.filter(v => v._id == userId).length > 0 ||
+                        foundTeam.applies.filter(v => v.applyingUser == userId).length > 0
+                    )) {
+                        res.json({
+                            code: -5,
+                            msg: 'already in'
+                        });
+                    } else {
+                        res.json({
+                            code: 0,
+                            msg: 'ok',
+                            team: foundTeam
+                        });
+                    }
+                } else {
+                    res.json({
+                        code: -4,
+                        msg: 'not found',
+                    });
+                }
             })
             .catch((err) => {
                 console.log(err);

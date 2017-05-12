@@ -8,7 +8,7 @@ import FooterContainer from '../Layout/FooterContainer';
 import axios from 'axios';
 import config from '../../../config/config';
 import TeamHeaderContent from '../Components/Header/TeamHeaderContent';
-import TeamContent from '../Components/Content/TeamContent';
+import TeamsContent from '../Components/Content/TeamsContent';
 import Footer from '../Components/Footer/Footer';
 
 import { addUser } from '../../actions/userActions';
@@ -32,7 +32,7 @@ class Teams extends React.Component {
                     <TeamHeaderContent history={history}/>
                 </HeaderContainer>
                 <ContentContainer>
-                    <TeamContent history={history}/>
+                    <TeamsContent history={history}/>
                 </ContentContainer>
                 <FooterContainer>
                     <Footer />
@@ -42,6 +42,6 @@ class Teams extends React.Component {
     }
 }
 
-Teams = connect()(Teams);
+// Teams = connect()(Teams);
 
 export default Teams;

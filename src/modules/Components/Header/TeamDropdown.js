@@ -23,13 +23,16 @@ class TeamDropdown extends React.Component {
         }
 
         let isSuperManager = false;
-        if(user && currentTeam) {
-            isSuperManager = user._id === currentTeam.superManager;
-        }
-
         let teamMenus;
-        if(user) {
-            teamMenus = user.teams.map((v) => {
+        if(user && currentTeam) {
+            isSuperManager = user._id === currentTeam.superManager._id;
+            let teams = [];
+            user.teams.forEach((v) => {
+                if(v._id !== currentTeam._id) {
+                    teams.push(v);
+                }
+            });
+            teamMenus = teams.map((v) => {
                 return (
                     <Menu.Item key={v._id}>
                         <Link to={`/teams/${v._id}/projects`} onClick={() => changeTeam(v._id)}>{v.teamName}</Link>
@@ -37,6 +40,7 @@ class TeamDropdown extends React.Component {
                 );
             });
         }
+
         const menu = (
             <Menu onSelect={this.handleDropdownOnSelect} className={`dropdown-menu-team`}>
                 {
@@ -47,7 +51,7 @@ class TeamDropdown extends React.Component {
                 }
                 
                 <Menu.Item key={`invite-member`}>
-                    <Link to={`/teams/${teamId}/invite`}>邀请成员</Link>
+                    <Link to={`/teams/${teamId}/invite/new`}>邀请成员</Link>
                 </Menu.Item>
                 <Menu.Divider className={`team-change-divider`}/>
                 <MenuItemGroup title="团队切换">

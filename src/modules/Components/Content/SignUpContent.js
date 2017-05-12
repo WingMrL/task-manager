@@ -9,14 +9,51 @@ import logo from '../../../assets/images/index/task-manager.png';
 import axios from 'axios';
 import config from '../../../../config/config';
 import { signIn } from '../../../actions/hasSignInActions';
+import { setCurrentTeam } from '../../../actions/currentTeamActions';
 
 class SignUpContent extends React.Component {
 
+    
+    componentWillMount() {
+        let { state } = this.props.location;
+        let { dispatch, history } = this.props;
+        let joinId = '';
+        if(state) {
+            joinId = state[0].slice(3);
+            axios.get(`${config.serverHost}/api/team/getTeamByJoinId`, {
+                    params: {
+                        joinId
+                    }
+                })
+                .then((result) => {
+                    let { data } = result;
+                    if(data.code === 0) {
+                        dispatch(setCurrentTeam(data.team));
+                    } else if(data.code === -4) {
+                        console.log(`${data.msg}: ${data.code}`);
+                        history.push(`/404`);
+                    }
+                })
+                .catch((err) => {
+                    console.log(err);
+                });
+        }
+    }
+    
+
     handleSubmit = (e) => {
-        let { history, dispatch } = this.props;
+        let { history, dispatch, location, currentTeam } = this.props;
+        let { state } = location;
+        let joinId = '';
+        if(currentTeam) {
+            joinId = currentTeam.joinId;
+        }
         e.preventDefault();
         this.props.form.validateFields((err, values) => {
             if (!err) {
+                if(values.teamName === undefined) {
+                    values.joinId = joinId;
+                }
                 // console.log('Received values of form: ', values);
                 axios.post(`${config.serverHost}/api/user/signup`, {
                     user: values
@@ -27,7 +64,11 @@ class SignUpContent extends React.Component {
                         localStorage.setItem('token', result.data.token);
                         localStorage.setItem('userId', result.data.user._id);
                         dispatch(signIn());
-                        history.push(`/teams`);
+                        if(state) {
+                            history.push(`/join?t=${joinId}`);
+                        } else {
+                            history.push(`/teams`);
+                        }
                     } else if(result.data.code == 1) {
                         message.error(`该邮箱已注册!`);
                     }
@@ -38,23 +79,47 @@ class SignUpContent extends React.Component {
         });
     }
 
+    handleLinkToSignInOnClick = (e) => {
+        let { history } = this.props;
+        let { state } = this.props.location;
+        if(state) {
+            e.preventDefault();
+            let search = state[0].slice(3);
+            history.push(`/user/sign_in`, [search]);
+        }
+    }
+
     render() {
         const { getFieldDecorator } = this.props.form;
+        const { currentTeam } = this.props;
+        const { state } = this.props.location;
+        let teamName = '';
+        if(currentTeam) {
+            teamName = currentTeam.teamName;
+        }
         return (
             <div className={`signup-content-container`}>
                 <Link to={`/`}><img src={logo} alt='logo' className={`img-logo`}/></Link>
 
                 <Form onSubmit={this.handleSubmit} className="signup-form">
-                    <FormItem>
-                        {getFieldDecorator('teamName', {
-                            rules: [{ 
-                                required: true, 
-                                message: '请输入你的团队名称!' 
-                            }],
-                        })(
-                            <Input prefix={<Icon type="team" style={{ fontSize: 13 }} />} placeholder="团队名称" />
-                        )}
-                    </FormItem>
+                    {
+                        state === undefined ?
+                        <FormItem>
+                            {getFieldDecorator('teamName', {
+                                rules: [{ 
+                                    required: true, 
+                                    message: '请输入你的团队名称!' 
+                                }],
+                            })(
+                                <Input prefix={<Icon type="team" style={{ fontSize: 13 }} />} placeholder="团队名称" />
+                            )}
+                        </FormItem>
+                        :
+                        <div className={`team-info`}>
+                            <h2 className={`title`}>加入「{teamName}」</h2>
+                            <p className={`hint-text`}>你需要注册TM账户</p>
+                        </div>
+                    }
                     <FormItem>
                         {getFieldDecorator('userName', {
                             rules: [{ 
@@ -111,10 +176,10 @@ class SignUpContent extends React.Component {
                             <Checkbox>Remember me</Checkbox>
                         )}*/}
                         {/*<a className={`login-form-forgot`} href="">Forgot password</a>*/}
-                        <Button type="primary" htmlType="submit" className={`login-form-button`}>
+                        <Button type="primary" htmlType="submit" className={`signup-form-button`}>
                             注 册
                         </Button>
-                        已有 TM 账户？ <Link to={`/user/sign_in`}>直接登陆</Link>
+                        已有 TM 账户？ <Link to={`/user/sign_in`} onClick={this.handleLinkToSignInOnClick}>直接登陆</Link>
                     </FormItem>
                 </Form>
             </div>
@@ -122,7 +187,15 @@ class SignUpContent extends React.Component {
     }
 }
 
+const mapStateToProps = (state, ownProps) => {
+    let { currentTeam } = state;
+    return {
+        currentTeam,
+        ...ownProps,
+    };
+};
+
 SignUpContent = Form.create()(SignUpContent);
-SignUpContent = connect()(SignUpContent);
+SignUpContent = connect(mapStateToProps)(SignUpContent);
 
 export default SignUpContent;

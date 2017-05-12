@@ -3,20 +3,32 @@ var Schema = mongoose.Schema;
 var ObjectId = Schema.Types.ObjectId;
 
 var TaskSchema = new Schema({
-  name: String,
-  description: String,
+  taskName: String,
+  description: {
+      type: String,
+      default: '',
+  },
+  deadLine: String,
   finished: {
     type: Boolean,
     default: false,
+  },
+  doing: {
+    type: Boolean,
+    default: false,
+  },
+  project: {
+    type: ObjectId,
+    ref: 'ProjectModal'
   },
   executor: {
     type: ObjectId,
     ref: 'UserModal'
   },
-  comments: {
+  comments: [{
     type: ObjectId,
     ref: 'CommentModal'
-  },
+  }],
   meta: {
     createAt: {
       type: Date,

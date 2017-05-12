@@ -29,7 +29,7 @@ class NewProjects extends React.Component {
                         />
                 </HeaderContainer>
                 <ContentContainer>
-                    <NewProjectsContent />
+                    <NewProjectsContent history={history}/>
                 </ContentContainer>
                 <FooterContainer>
                     <Footer />

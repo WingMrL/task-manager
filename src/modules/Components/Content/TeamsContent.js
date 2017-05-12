@@ -3,7 +3,7 @@ import React from 'react';
 import { Card, Icon, Modal, Input } from 'antd';
 import { Link } from 'react-router-dom';
 import { connect } from 'react-redux';
-import './TeamContent.less';
+import './TeamsContent.less';
 import axios from 'axios';
 import config from '../../../../config/config';
 import { addUser } from '../../../actions/userActions';
@@ -23,7 +23,7 @@ class TeamsContent extends React.Component {
         const token = localStorage.getItem('token');
         const userId = localStorage.getItem('userId');
         if(token === null || userId === null) {
-            history.push(`/user/sign_id`);
+            history.push(`/user/sign_in`);
         } else {
             const data = {
                 params: {
@@ -31,12 +31,12 @@ class TeamsContent extends React.Component {
                     userId
                 }
             };
-            axios.get(`${config.serverHost}/api/getUser`, data)
+            axios.get(`${config.serverHost}/api/user/getUser`, data)
                 .then((result) => {
                     if(result.data.code === 0) {
                         dispatch(addUser(result.data.user));
                     } else if(result.data.code === -98) {
-                        history.push(`/user/sign_id`);
+                        history.push(`/user/sign_in`);
                     } else if(result.data.code === -1) {
                         console.log('请求参数错误!');
                     }
@@ -56,7 +56,7 @@ class TeamsContent extends React.Component {
     }
     
     newTeamModalOnOk = (e) => {
-        if(thi.state.valueOfTeamName === '') {
+        if(this.state.valueOfTeamName === '') {
             message.error(`团队名字不能为空！`, 3);
             return;
         }
@@ -103,6 +103,7 @@ class TeamsContent extends React.Component {
         const { user } = this.props;
         const { newTeamModalVisible, valueOfTeamName } = this.state;
         let teams;
+        let applyingTeams;
         if(user && user.teams) {
             teams = user.teams.map((v) => {
                 return (
@@ -118,10 +119,30 @@ class TeamsContent extends React.Component {
                 );
             });
         }
+        if(user && user.applies) {
+            applyingTeams = user.applies.map((v) => {
+                return (
+                    <div key={v._id} className={`applying-team`}>
+                        <Link 
+                            to={`teams/${v._id}/projects`} 
+                            className={`link-team`}
+                            disabled={true}
+                            >
+                                <span className={`team-name`}>{v.applyingTeam.teamName}</span>
+                                <span className={`hint`}>
+                                    <Icon type="lock"/>
+                                    已申请加入，等待审核
+                                </span>
+                        </Link>
+                    </div>
+                );
+            });
+        }
         
         return (
             
-            <div className={`team-content-container`}>
+            <div className={`teams-content-container`}>
+                {applyingTeams}
                 {teams}
                 <Card>
                     <Link to={`/`} className={`link-new-team`} onClick={this.handleNewTeamClick}>

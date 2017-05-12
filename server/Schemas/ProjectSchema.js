@@ -4,7 +4,6 @@ var ObjectId = Schema.Types.ObjectId;
 
 var ProjectSchema = new Schema({
   projectName: String,
-  projectLogoUrl: String,
   description: {
     type: String,
     default: ''
@@ -13,7 +12,7 @@ var ProjectSchema = new Schema({
     type: Boolean,
     default: false,
   },
-  teams: {
+  team: {
     type: ObjectId,
     ref: 'TeamModal'
   },
@@ -21,9 +20,9 @@ var ProjectSchema = new Schema({
     type: ObjectId,
     ref: 'UserModal'
   }],
-  lists: [{
+  tasks: [{
     type: ObjectId,
-    ref: 'ListModal'
+    ref: 'TaskModal'
   }],
   meta: {
     createAt: {

@@ -1,0 +1,57 @@
+.custom-who-and-when-container {
+    height: 20px;
+    background-color: #efefef;
+    color: #999;
+    font-size: 12px;
+    width: 160px;
+    text-align: center;
+    border-radius: 20px;
+    cursor: pointer;
+    position: relative;
+    
+
+    .who-and-when {
+        height: 20px;
+        line-height: 20px;
+        
+    }
+
+    .who-and-when-setting {
+        display: flex;
+        flex-direction: column;
+        background-color: #f7f7f7;
+        box-shadow: 0 1px 6px rgba(0, 0, 0, .2);
+        position: absolute;
+        z-index: 1;
+        width: 120px;
+        top: 0;
+        left: 100%;
+        margin-left: 20px;
+        padding: 4px;
+
+        .text {
+            font-size: 12px;
+            color: #999;
+            text-align: left;
+            margin-left: 2px;
+        }
+    }
+
+    .who-and-when-setting:before {
+        // border: 10px solid #f7f7f7;
+        // border-top-color: transparent;
+        // border-bottom-color: transparent;
+        // border-left: 0;
+        width: 20px;
+        height: 1px;
+        background-color: #ddd;
+        content: '';
+        display: block;
+        position: absolute;
+        left: -20px;
+        top: 10px;
+    }
+}
+
+
+                     

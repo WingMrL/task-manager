@@ -11,11 +11,13 @@ let uuidV1 = require('uuid/v1');
 // code: -1, msg: params error
 // code: -2, msg: eMail not sign up
 // code: -3, msg: passwork or eMail not match
+// code: -4, msg: not found
+// code: -5, msg: already in
 // code: -98, msg: need signin
 
 // sign up
 exports.signup = function(req, res) {
-  let {userName, password, eMail, teamName} = req.body.user;
+  let {userName, password, eMail, teamName, joinId} = req.body.user;
   let _user = {
     userName,
     password,
@@ -37,35 +39,45 @@ exports.signup = function(req, res) {
             let user = new UserModal(_user);
             user.save()
                 .then((savedUser) => {
-                  let joinId = uuidV1();
-                  let _team = {
-                    teamName,
-                    superManager: savedUser._id,
-                    joinId: joinId
-                  };
-
-                  let team = new TeamModal(_team);
-                  // console.log(team);
-                  team.save()
-                      .then((savedTeam) => {
-                        savedUser.teams = [savedTeam._id];
-                        savedUser.save()
-                            .then((savedUser02) => {
-                              let token = jwt.sign(savedUser02, config.secret, {expiresIn: 24 * 3600}); 
-                              res.json({
-                                code: 0,
-                                msg: 'ok',
-                                token,
-                                user: savedUser02
-                              });
-                            })
-                            .catch((err) => {
-                              console.log(err);
-                            });
-                      })
-                      .catch((err) => {
-                        console.log(err);
+                  if(joinId) {
+                      let token = jwt.sign(savedUser, config.secret, {expiresIn: 24 * 3600}); 
+                      res.json({
+                        code: 0,
+                        msg: 'ok',
+                        token,
+                        user: savedUser
                       });
+                  } else {
+                      let joinId = uuidV1();
+                      let _team = {
+                        teamName,
+                        superManager: savedUser._id,
+                        joinId: joinId
+                      };
+
+                      let team = new TeamModal(_team);
+                      // console.log(team);
+                      team.save()
+                          .then((savedTeam) => {
+                            savedUser.teams = [savedTeam._id];
+                            savedUser.save()
+                                .then((savedUser02) => {
+                                  let token = jwt.sign(savedUser02, config.secret, {expiresIn: 24 * 3600}); 
+                                  res.json({
+                                    code: 0,
+                                    msg: 'ok',
+                                    token,
+                                    user: savedUser02
+                                  });
+                                })
+                                .catch((err) => {
+                                  console.log(err);
+                                });
+                          })
+                          .catch((err) => {
+                            console.log(err);
+                          });
+                  }
                 })
                 .catch((err) => {
                     console.log(err)
@@ -131,6 +143,14 @@ exports.getUser = function(req, res) {
       .populate({
         path: 'teams', 
         options
+      })
+      .populate({
+        path: 'applies',
+        options,
+        populate: {
+            path: 'applyingTeam',
+            select: 'teamName',
+        }
       })
       .exec()
       .then((foundUser) => {

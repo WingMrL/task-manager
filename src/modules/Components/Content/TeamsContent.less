@@ -1,6 +1,6 @@
 .custom-ant-layout-content { 
 .content-container {
-.team-content-container {
+.teams-content-container {
     width: 500px;
     padding: 5px 0;
     margin: 0 auto;
@@ -55,13 +55,60 @@
         }
     }
 
-    .ant-card:nth-child(1) {
+    .ant-card:first-child {
         border-radius: 4px 4px 0 0;
     }
 
     .ant-card:nth-child(n+2) {
         border-radius: 0;
     }
+
+    .ant-card:last-child {
+        border-radius: 0 0 4px 4px;
+    }
+
+    .applying-team {
+        width: 500px;
+        height: 60px;
+        background-color: #f7f7f7;
+        border: 1px solid #e9e9e9;
+
+        .link-team {
+            display: block;
+            width: 100%;
+            height: 60px;
+
+            .team-name {
+                display: block;
+                font-size: 20px;
+                color: #666;
+                width: 100%;
+                height: 20px;
+                line-height: 20px;
+                margin-top: 10px;
+                text-align: center;
+            }
+
+            .hint {
+                font-size: 14px;
+                display: block;
+                width: 100%;
+                height: 20px;
+                line-height: 20px;
+                margin-top: 2px;
+                text-align: center;
+            }
+        }
+    }
+
+    .applying-team:nth-child(1) {
+        border-radius: 4px 4px 0 0;
+    }
+
+    .applying-team:nth-child(n+2) {
+        border-radius: 0;
+    }
+
 }
 }
 }

@@ -49,6 +49,7 @@ class MembersContent extends React.Component {
         let teamId = '';
         let teamName = '';
         let membersList = [];
+        let joinAppliesNum = 0;
         if(currentTeam) {
             teamId = currentTeam._id;
             teamName = currentTeam.teamName;
@@ -59,9 +60,18 @@ class MembersContent extends React.Component {
             currentTeam.normalMembers.forEach((v) => {
                 membersList.push(this.genMember(v, 'normal-member'));
             });
+            joinAppliesNum = currentTeam.applies.length;
         }
         return (
             <div className={`members-content-container`}>
+                {
+                    joinAppliesNum > 0 &&
+                    <Link 
+                        to={`/teams/${teamId}/join/approval`} 
+                        className={`apply-join-tip`}>
+                        有{joinAppliesNum}条未审核的加入申请
+                    </Link>
+                }
                 <div className={`members-tools`}>
                     <h3 className={`team-name`}>{teamName}</h3>
                     <Link to={`/teams/${teamId}/invite/new`} className={`invite-new-member`}>邀请新成员</Link>

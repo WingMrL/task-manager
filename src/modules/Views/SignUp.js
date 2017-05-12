@@ -21,13 +21,16 @@ class Index extends React.Component {
     }
 
     render() {
-        let { history } = this.props;
+        let { history, location } = this.props;
         return (
             <LayoutMain>
                 <HeaderContainer>
                 </HeaderContainer>
                 <ContentContainer>
-                    <SignUpContent history={history}/>
+                    <SignUpContent 
+                        history={history}
+                        location={location}
+                        />
                 </ContentContainer>
                 <FooterContainer>
                     <Footer />

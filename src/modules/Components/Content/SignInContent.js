@@ -14,10 +14,12 @@ class SignInContent extends React.Component {
 
     handleSubmit = (e) => {
         let { history, dispatch } = this.props;
+        let joinId = this.props.location.state;
         e.preventDefault();
         this.props.form.validateFields((err, values) => {
             if (!err) {
-                console.log('Received values of form: ', values);
+                // console.log('Received values of form: ', values);
+                
                 axios.post(`${config.serverHost}/api/user/signin`, {
                     user: values
                 }).then((result) => {
@@ -26,7 +28,11 @@ class SignInContent extends React.Component {
                         localStorage.setItem('token', result.data.token);
                         localStorage.setItem('userId', result.data.user._id);
                         dispatch(signIn());
-                        history.push(`/teams`);
+                        if(joinId) {
+                            history.push(`/join?t=${joinId}`);
+                        } else {
+                            history.push(`/teams`);
+                        }
                     } else if(result.data.code == -2) {
                         message.error(`此邮箱尚未注册！`, 3);
                     } else if(result.data.code == -3) {

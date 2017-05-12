@@ -22,6 +22,10 @@ var UserSchema = new Schema({
     type: ObjectId,
     ref: 'TaskModal'
   }],
+  applies: [{
+    type: ObjectId,
+    ref: 'ApplyModal',
+  }],
   meta: {
     createAt: {
       type: Date,
