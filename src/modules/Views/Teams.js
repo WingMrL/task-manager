@@ -14,6 +14,12 @@ import Footer from '../Components/Footer/Footer';
 import { addUser } from '../../actions/userActions';
 import { connect } from 'react-redux';
 
+/**
+ * @description 团队管理与创建页面
+ * 
+ * @class Teams
+ * @extends {React.Component}
+ */
 class Teams extends React.Component {
 
     constructor(props) {

@@ -10,7 +10,13 @@ import config from '../../../config/config';
 import Footer from '../Components/Footer/Footer';
 import SignUpContent from '../Components/Content/SignUpContent';
 
-class Index extends React.Component {
+/**
+ * @description 注册页
+ * 
+ * @class SignUp
+ * @extends {React.Component}
+ */
+class SignUp extends React.Component {
 
     constructor(props) {
         super(props);
@@ -40,4 +46,4 @@ class Index extends React.Component {
     }
 }
 
-export default Index;
+export default SignUp;

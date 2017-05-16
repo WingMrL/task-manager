@@ -2,6 +2,7 @@ import { combineReducers } from 'redux';
 import hasSignIn from './hasSignInReducer';
 import user from './userReducer';
 import currentTeam from './currentTeamReducer';
+import currentTask from './currentTaskReducer';
 import currentProject from './currentProjectReducer';
 import applyMembers from './applyMembersReducer';
 import choosingProjectMembers from './choosingProjectMembersReducer';
@@ -15,6 +16,7 @@ const TaskManagerApp = combineReducers({
   choosingProjectMembers,
   currentProject,
   currentTasks,
+  currentTask
 });
 
 export default TaskManagerApp;

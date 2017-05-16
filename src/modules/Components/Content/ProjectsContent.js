@@ -1,6 +1,6 @@
 import React from 'react';
 
-import { Card, Icon } from 'antd';
+import { Card, Icon, Tooltip } from 'antd';
 import { Link } from 'react-router-dom';
 import { connect } from 'react-redux';
 import './ProjectsContent.less';
@@ -20,22 +20,33 @@ class ProjectsContent extends React.Component {
         if(user) {
             userId = user._id;
         }
-        let projectList ;
+        let projectList = [];
         if(currentTeam) {
             teamId = currentTeam._id;
-            projectList = currentTeam.projects.map((v) => {
-                return (
-                    <Link 
-                        className={`project`}
-                        key={v._id}
-                        to={`/projects/${v._id}`}
-                        >
-                        <Card>
-                            <Icon type="clock-circle-o" className={`icon`}/>
-                            <span className={`project-name`}>{v.projectName}</span>
-                        </Card>
-                    </Link>
-                );
+            currentTeam.projects.forEach((v) => {
+                if(v.members.indexOf(userId) > -1) {
+                    let projectName = '';
+                    if(v.projectName.length > 7) {
+                        projectName = v.projectName.slice(0, 7) + "...";
+                    } else {
+                        projectName = v.projectName;
+                    }
+                    projectList.push(
+                        <Link 
+                            className={`project`}
+                            key={v._id}
+                            to={`/projects/${v._id}`}
+                            >
+                            <Card>
+                                
+                                <Icon type="clock-circle-o" className={`icon`}/>
+                                <Tooltip title={v.projectName} placement="bottom">
+                                    <span className={`project-name`}>{projectName}</span>
+                                </Tooltip>
+                            </Card>
+                        </Link>
+                    );
+                }
             });
         }
         return (

@@ -8,34 +8,33 @@ import FooterContainer from '../Layout/FooterContainer';
 import Footer from '../Components/Footer/Footer';
 
 import CommonHeaderContent  from '../Components/Header/CommonHeaderContent';
-import InviteNewMemberContent from '../Components/Content/InviteNewMemberContent';
+import TaskContent from '../Components/Content/TaskContent';
 
-/**
- * @description 邀请好友
- * 
- * @class InviteNewMember
- * @extends {React.Component}
- */
-class InviteNewMember extends React.Component {
+class Task extends React.Component {
 
     constructor(props) {
         super(props);
     }
 
     render() {
+        // console.log(this.props);
         const { history } = this.props;
-        const { teamId } = this.props.match.params;
+        const { teamId, projectId, taskId } = this.props.match.params;
         return (
             <LayoutMain>
                 <HeaderContainer>
                     <CommonHeaderContent 
                         history={history}
                         teamId={teamId}
-                        selectedKeys={['teams']}
+                        selectedKeys={['projects']}
                         />
                 </HeaderContainer>
                 <ContentContainer>
-                    <InviteNewMemberContent />
+                    <TaskContent 
+                        taskId={taskId}
+                        projectId={projectId}
+                        history={history}
+                        />
                 </ContentContainer>
                 <FooterContainer>
                     <Footer />
@@ -45,4 +44,4 @@ class InviteNewMember extends React.Component {
     }
 }
 
-export default InviteNewMember;
+export default Task;

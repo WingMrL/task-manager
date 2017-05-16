@@ -12,6 +12,12 @@ import config from '../../../config/config';
 import HomePage from '../Components/Content/HomePage';
 import { signIn } from '../../actions/hasSignInActions';
 
+/**
+ * @description 首页
+ * 
+ * @class Index
+ * @extends {React.Component}
+ */
 class Index extends React.Component {
 
     constructor(props) {

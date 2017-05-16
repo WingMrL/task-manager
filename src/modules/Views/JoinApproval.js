@@ -10,6 +10,12 @@ import Footer from '../Components/Footer/Footer';
 import CommonHeaderContent  from '../Components/Header/CommonHeaderContent';
 import JoinApprovalContent from '../Components/Content/JoinApprovalContent';
 
+/**
+ * @description 申请加入审批页面
+ * 
+ * @class JoinApproval
+ * @extends {React.Component}
+ */
 class JoinApproval extends React.Component {
 
     constructor(props) {

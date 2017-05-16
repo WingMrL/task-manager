@@ -40,8 +40,14 @@ module.exports = {
     contentBase: resolve(__dirname, 'dist'),
     // 输出文件的路径
 
-    publicPath: '/'
+    publicPath: '/',
     // 和上文 output 的“publicPath”值保持一致
+
+    historyApiFallback: true,
+
+    // proxy: {
+    //   "/": "http://192.168.0.101:3000"
+    // }
   },
 
   module: {

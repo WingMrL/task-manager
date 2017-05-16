@@ -10,6 +10,12 @@ import Footer from '../Components/Footer/Footer';
 import CommonHeaderContent  from '../Components/Header/CommonHeaderContent';
 import MembersContent from '../Components/Content/MembersContent';
 
+/**
+ * @description 团队成员列表页
+ * 
+ * @class Members
+ * @extends {React.Component}
+ */
 class Members extends React.Component {
 
     constructor(props) {

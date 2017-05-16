@@ -10,6 +10,12 @@ import Footer from '../Components/Footer/Footer';
 import CommonHeaderContent  from '../Components/Header/CommonHeaderContent';
 import ProjectsContent from '../Components/Content/ProjectsContent';
 
+/**
+ * @description 项目列表
+ * 
+ * @class Projects
+ * @extends {React.Component}
+ */
 class Projects extends React.Component {
 
     constructor(props) {

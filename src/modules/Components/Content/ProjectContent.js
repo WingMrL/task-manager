@@ -8,11 +8,17 @@ import axios from 'axios';
 import WhoAndWhen from './WhoAndWhen';
 import config from '../../../../config/config';
 import { setCurrentProject } from '../../../actions/currentProjectActions';
-import { setCurrentTasks, toggleTaskInCurrentTasks } from '../../../actions/currentTasksActions';
+import { setCurrentTasks, toggleTaskShowInCurrentTasks } from '../../../actions/currentTasksActions';
 // import '../../../assets/style.less';
 
 
 
+/**
+ * @description 项目列表的内容
+ * 
+ * @class ProjectContent
+ * @extends {React.Component}
+ */
 class ProjectContent extends React.Component {
 
     state = {
@@ -37,15 +43,17 @@ class ProjectContent extends React.Component {
 
     handleAddNewTaskCancel = (e) => {
         this.resetNewTaskState();
+
         this.setState({
             addingNewTask: false,
         });
     }
 
     handleWhoAndWhenOnClick = (id) => {
+        const { dispatch } = this.props;
        if(id) {
-            const { dispatch } = this.props;
-            dispatch(toggleTaskInCurrentTasks(id));
+            // 显示/不显示任务设置面板（指派人和截止时间）
+            dispatch(toggleTaskShowInCurrentTasks(id));
        } else {
             this.setState((prevState) => {
                 return {
@@ -53,16 +61,43 @@ class ProjectContent extends React.Component {
                 }
             });
        }
-        // this.setState({
-        //     // remarkText: [
-        //     //                 ...this.remarkText.slice(0, index), 
-        //     //                 recorde.description, 
-        //     //                 ...this.remarkText.slice(index + 1)
-        //     //             ]
-        //     remarkText: this.state.remarkText.slice(0, index).concat(recorde.description, this.state.remarkText.slice(index + 1))
-        // });
     }
 
+    /**
+     * @description 完成/未完成 当前任务
+     * @param taskId 当前任务id
+     * 
+     * @memberof ProjectContent
+     */
+    toggleTaskFinish = (taskId) => {
+        const { history, projectId } = this.props;
+        if(taskId) {
+            let token = localStorage.getItem('token');
+            axios.post(`${config.serverHost}/api/task/toggleTaskFinish`, {
+                token,
+                taskId,
+            })
+            .then((result) => {
+                let { data } = result;
+                if(data.code == 0) {
+                    this.getProject(projectId);
+                } else if(data.code == -98) {
+                    history.push(`/user/sign_in`);
+                } else if(data.code == -1) {
+                    console.log(`${data.msg}: ${data.code}`);
+                }
+            })
+            .catch((err) => {
+                console.log(err);
+            });
+        }
+    }
+
+    /**
+     * @description 清空新建项目面板的信息
+     * 
+     * @memberof ProjectContent
+     */
     resetNewTaskState = () => {
         this.setState({
             newTaskName: '',
@@ -71,11 +106,19 @@ class ProjectContent extends React.Component {
         });
     }
 
+    /**
+     * @description 获取当前项目的详细信息
+     * @param projectId 当前项目的id
+     * 
+     * @memberof ProjectContent
+     */
     getProject = (projectId) => {
         const url = `${config.serverHost}/api/project/getProject`;
         const { history, dispatch } = this.props;
+
         const token = localStorage.getItem('token');
         const userId = localStorage.getItem('userId');
+
         if(token === null || userId === null) {
             history.push(`/user/sign_in`);
         } else {
@@ -105,13 +148,20 @@ class ProjectContent extends React.Component {
         }
     }
 
+    /**
+     * @description 添加新任务
+     * 
+     * @memberof ProjectContent
+     */
     handleAddNewTaskOk = (e) => {
         const { newTaskName, when, who } = this.state;
         const { projectId, currentProject, history } = this.props;
+
         if(newTaskName == '') {
             message.error(`任务名称不能为空！`, 3);
             return;
         }
+
         let deadLine ;
         let userId ;
         if( when != '没有截止日期') {
@@ -126,6 +176,7 @@ class ProjectContent extends React.Component {
         }
         
         let token = localStorage.getItem('token');
+
         axios.post(`${config.serverHost}/api/task/newTask`, {
                 token,
                 projectId,
@@ -136,6 +187,7 @@ class ProjectContent extends React.Component {
             .then((result) => {
                 let { data } = result;
                 if(data.code == 0) {
+                    // 更新redux state
                     this.getProject(projectId);
                     this.setState({
                         addingNewTask: false,
@@ -151,44 +203,63 @@ class ProjectContent extends React.Component {
             });
     }
 
-    handleSelectOnChange = (value, id) => {
-        if(id) {
+    /**
+     * @description 设置日期和指派人
+     * @param settingWho 指派人
+     * @param settingWhen 截止时间
+     * @param id 任务id
+     * 
+     * @memberof ProjectContent
+     */
+    handleSettingWhoAndWhen = (settingWho, settingWhen, id) => {
+        const { currentProject, history, dispatch, projectId } = this.props;
 
-        } else {
-            const { currentProject } = this.props;
-            let members = currentProject.members.map(v => v.userName);
-            this.setState({
-                who: members.indexOf(value) > -1 ? value : '未指派'
-            });
-        }
-    }
-
-    handleDataOnChange = (date, dateString, id) => {
-        // console.log(date, dateString);
-        if(id) {
-            
-        } else {
-            const { who } = this.state;
-            if(who == '未指派') {
-                message.warning(`选择日期之前，请先指派!`, 3);
-                return ;
+        let executorId; //执行者id
+        currentProject.members.forEach((v) => {
+            if(v.userName == settingWho) {
+                executorId = v._id;
             }
+        });
+
+        if(id) {
+            let token = localStorage.getItem('token');
+            axios.post(`${config.serverHost}/api/task/changeExecutorAndDeadLine`, {
+                    taskId: id,
+                    executorId,
+                    deadLine: settingWhen == '没有截止日期' ? undefined : settingWhen,
+                    token
+                })
+                .then((result) => {
+                    let { data } = result;
+                    if(data.code == 0) {
+                        this.getProject(projectId);
+                    } else if (data.code == -98) {
+                        history.push(`/user/sign_in`);
+                    } else if (data.code == -1) {
+                        console.log(`${data.msg}: ${data.code}`);
+                    }
+                })
+                .catch((err) => {
+                    console.log(err);
+                });
+        } else {
             this.setState({
-                when: dateString == '' ? '没有截止日期' : dateString
+                who: settingWho,
+                when: settingWhen
             });
         }
-       
     }
 
     render() {
         const { history, currentProject, currentTasks } = this.props;
         const { newTaskName, addingNewTask, whoAndWhenSettingVisible, who, when } = this.state;
-        let unfinishTasks = 0;
-        let projectName = '';
-        let projectMembersNum = 0;
-        let projectId = '';
-        let members = [];
-        let tasksList;
+        let unfinishTasks = 0; //未完成的任务数量
+        let projectName = ''; // 项目的名称
+        let projectMembersNum = 0; //项目的成员数量
+        let projectId = ''; // 项目的id
+        let members = []; // 成员 UserModal
+        let unfinishedTasksList = []; // 未完成的任务列表
+        let finishedTaskList = []; // 已完成的任务列表
         if(currentProject) {
             projectName = currentProject.projectName;
             projectMembersNum = currentProject.members.length;
@@ -196,45 +267,79 @@ class ProjectContent extends React.Component {
             members = currentProject.members;
         }
         if(currentTasks) {
-            tasksList = currentTasks.map((v) => {
-                if(!v.task.finished) {
-                    unfinishTasks ++;
-                }
+            currentTasks.forEach((v) => {
+                
                 let who = '未指派';
                 let when = '没有截止日期';
-                if(v.task.executorId) {
+                if(v.task.executor) {
                     members.forEach((member) => {
-                        if(member._id == v.task.executorId) {
+                        if(member._id == v.task.executor) {
                             who = member.userName;
                         }
                     });
                 }
                 if(v.task.deadLine) {
-                    when = v.tash.deadLine;
+                    when = v.task.deadLine;
                 }
-                return (
-                    <Card key={v._id} className={`task`}>
-                        <Checkbox
-                            checked={v.task.finished}
-                            >
-                        </Checkbox>
-                        <Link 
-                            to={`/projects/${projectId}/tasks/${v._id}`}  
-                            className={`link`}>
-                            {v.task.taskName}
-                        </Link>
-                        <WhoAndWhen 
-                            who={who}
-                            when={when}
-                            members={members}
-                            taskId={v._id}
-                            whoAndWhenSettingVisible={v.show}
-                            handleWhoAndWhenOnClick={this.toggleTaskById}
-                            handleSelectOnChange={this.handleSelectOnChange}
-                            handleDataOnChange={this.handleDataOnChange}
-                            />
-                    </Card>
-                );
+                if(v.task.finished) {
+                    finishedTaskList.push(
+                        <Card key={v._id} className={`task`}>
+                            <Checkbox
+                                checked={v.task.finished}
+                                onChange={e => this.toggleTaskFinish(v._id)}
+                                >
+                            </Checkbox>
+                            <Link 
+                                to={`/projects/${projectId}/tasks/${v._id}`}  
+                                className={`link`}
+                                >
+                                {v.task.taskName}
+                            </Link>
+                            <WhoAndWhen 
+                                who={who}
+                                when={when}
+                                members={members}
+                                taskId={v._id}
+                                clickable={false}
+                                style={{
+                                    marginLeft: 10,
+                                }}
+                                whoAndWhenSettingVisible={v.show}
+                                handleWhoAndWhenOnClick={this.handleWhoAndWhenOnClick}
+                                handleSettingWhoAndWhen={this.handleSettingWhoAndWhen}
+                                />
+                        </Card>
+                    );
+                } else {
+                    unfinishTasks ++; // 统计未完成任务
+                    unfinishedTasksList.push(
+                        <Card key={v._id} className={`task`}>
+                            <Checkbox
+                                checked={v.task.finished}
+                                onChange={e => this.toggleTaskFinish(v._id)}
+                                >
+                            </Checkbox>
+                            <Link 
+                                to={`/projects/${projectId}/tasks/${v._id}`}  
+                                className={`link`}>
+                                {v.task.taskName}
+                            </Link>
+                            <WhoAndWhen 
+                                who={who}
+                                when={when}
+                                members={members}
+                                taskId={v._id}
+                                style={{
+                                    marginLeft: 10,
+                                }}
+                                whoAndWhenSettingVisible={v.show}
+                                handleWhoAndWhenOnClick={this.handleWhoAndWhenOnClick}
+                                handleSettingWhoAndWhen={this.handleSettingWhoAndWhen}
+                                />
+                        </Card>
+                    );
+                }
+                
             });
         }
         return (
@@ -257,7 +362,7 @@ class ProjectContent extends React.Component {
                     </div>
                 </div>
                 <div className={`project`}>
-                    { tasksList }
+                    { unfinishedTasksList }
                     {
                         addingNewTask ?
                         <Card className={`add-new-task-input-card`}>
@@ -275,8 +380,7 @@ class ProjectContent extends React.Component {
                                     members={members}
                                     whoAndWhenSettingVisible={whoAndWhenSettingVisible}
                                     handleWhoAndWhenOnClick={this.handleWhoAndWhenOnClick}
-                                    handleSelectOnChange={this.handleSelectOnChange}
-                                    handleDataOnChange={this.handleDataOnChange}
+                                    handleSettingWhoAndWhen={this.handleSettingWhoAndWhen}
                                     style={{
                                         marginTop: '10px',
                                     }}
@@ -302,6 +406,7 @@ class ProjectContent extends React.Component {
                             添加新任务
                         </Card>
                     }
+                    { finishedTaskList }
                 </div>
                 <div className={`project-footer`}></div>
             </div>

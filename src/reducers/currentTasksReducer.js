@@ -8,7 +8,7 @@ const currentProjectReducer = (state = [], action) => {
                   task: Object.assign({}, v)
               };
           });
-    case 'TOGGLE_TASK_IN_CURRENT_TASKS':
+    case 'TOGGLE_TASK_SHOW_IN_CURRENT_TASKS':
       return state.map((v) => {
               if(v._id == action.id) {
                   return Object.assign({}, v, {

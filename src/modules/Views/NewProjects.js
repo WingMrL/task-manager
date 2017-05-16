@@ -10,6 +10,12 @@ import Footer from '../Components/Footer/Footer';
 import CommonHeaderContent  from '../Components/Header/CommonHeaderContent';
 import NewProjectsContent from '../Components/Content/NewProjectsContent';
 
+/**
+ * @description 新建项目页
+ * 
+ * @class NewProjects
+ * @extends {React.Component}
+ */
 class NewProjects extends React.Component {
 
     constructor(props) {

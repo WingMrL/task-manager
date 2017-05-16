@@ -1,0 +1,180 @@
+.custom-ant-layout-content { 
+.content-container {
+.task-content-container {
+    width: 1100px;
+    min-height: 600px;
+    background-color: #f7f7f7;
+    border: 1px solid #e7e7e7;
+    margin: 4px 0;
+    padding: 30px;
+    box-shadow: 0 1px 6px rgba(0, 0, 0, .2);
+
+    .project-name-title {
+        color: #999;
+        display: block;
+    }
+
+    .project-name-title:hover {
+        color: #108ee9;
+    }
+    
+    @widthInner: 780px; 
+
+    .task-container {
+        width: @widthInner;
+        height: 30px;
+        margin-top: 10px;
+        display: flex;
+        justify-content: flex-start;
+        align-items: center;
+        // background-color: #ccc;
+
+        .task-name {
+            font-size: 20px;
+        }
+
+        .task-name-finished {
+            color: #ccc;
+        }
+    }
+
+    .add-description-container {
+        width: @widthInner;
+        height: 30px;
+        padding-left: 22px;
+        line-height: 30px;
+        color: #999;
+        font-size: 14px;
+    }
+
+    .task-description {
+        width: @widthInner;
+        min-height: 30px;
+        padding-left: 22px;
+        font-size: 13px;
+    }
+
+    .split-bar {
+        display: block;
+        width: @widthInner;
+        height: 1px;
+        background-color: #ccc;
+        margin-top: 30px;
+    }
+
+    .comment-container {
+        margin-top: 30px;
+        width: @widthInner;
+        min-height: 50px;
+        display: flex;
+        justify-content: flex-start;
+        align-items: flex-start;
+
+        .head-img {
+            display: block;
+            width: 50px;
+            height: 50px;
+            border-radius: 50px;
+        }
+
+        .info-container {
+            margin-left: 20px;
+
+            .userName {
+                color: #000;
+                font-size: 16px;
+                font-weight: 500;
+            }
+
+            .date {
+                color: #999;
+                font-size: 12px;
+                margin-left: 10px;
+            }
+
+            .content {
+                font-size: 13px;
+                margin-top: 10px;
+                white-space: pre-wrap;
+            }
+        }
+    }
+
+    .send-comment-container {
+        width: @widthInner;
+        min-height: 50px;
+        margin-top: 20px;
+        display: flex;
+        justify-content: flex-start;
+        align-items: flex-start;
+
+        .head-img {
+            display: block;
+            width: 50px;
+            height: 50px;
+            border-radius: 50px;
+        }
+
+        .click-to-input-container {
+            margin-left: 20px;
+
+            .click-to-input-input {
+                display: block;
+                margin-top: 10px;
+                width: @widthInner - 50px - 20px;
+                height: 30px;
+            }
+        }
+
+        .comment-editer {
+            margin-left: 20px;
+
+            .editer {
+                display: block;
+                width: @widthInner - 50px - 20px;
+                margin-bottom: 10px;
+            }
+
+            .cancel-btn {
+                margin-left: 20px;
+            }
+        }
+    }
+}
+}
+}
+
+.task-edit-modal {
+
+    .ant-modal {
+        position: absolute;
+        width: 520px;
+        height: 300px;
+        top: 50%;
+        left: 50%;
+        margin-left: -260px;
+        margin-top: -150px;
+    }
+}
+
+.task-delete-modal {
+
+    .ant-modal {
+        position: absolute;
+        width: 520px;
+        height: 300px;
+        top: 50%;
+        left: 50%;
+        margin-left: -260px;
+        margin-top: -150px;
+
+        .ant-modal-title {
+            font-size: 20px;
+        }
+
+        .text {
+            font-size: 16px;
+            text-align: center;
+        }
+    }
+}

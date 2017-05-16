@@ -26,7 +26,7 @@ class MembersContent extends React.Component {
         }
         return (
             <div className={`member`} key={member._id}>
-                <div className={`member-info`}>
+                <Link className={`member-info`} to={`/members/${member._id}`}>
                     <img 
                         src={`${config.serverHost}/${member.headImgUrl}`} 
                         alt={`头像`}
@@ -35,7 +35,7 @@ class MembersContent extends React.Component {
                     <span className={`member-identity ${level}`}>
                         {memberIdentity}
                     </span>
-                </div>
+                </Link>
                 <div className={`member-email`}>
                     {member.eMail}
                 </div>

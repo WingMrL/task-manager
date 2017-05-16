@@ -28,6 +28,7 @@ class MemberContent extends React.Component {
         // }
         return (
             <div className={`member-content-container`}>
+                这是成员的详情
             </div>
         );
     }

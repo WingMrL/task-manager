@@ -55,7 +55,12 @@ class NewProjectsContent extends React.Component {
         }
         let token = localStorage.getItem('token');
         let userId = user._id;
-        let membersId = choosingProjectMembers.map(v => v._id);
+        let membersId = [];
+        choosingProjectMembers.forEach((v) => {
+            if(v.checked) {
+                membersId.push(v._id);
+            }
+        });
         membersId.unshift(userId);
         axios.post(`${config.serverHost}/api/project/newProject`, {
                 token,

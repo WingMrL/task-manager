@@ -14,6 +14,12 @@ import Footer from '../Components/Footer/Footer';
 // import { addUser } from '../../actions/userActions';
 import { connect } from 'react-redux';
 
+/**
+ * @description 申请加入页面
+ * 
+ * @class Join
+ * @extends {React.Component}
+ */
 class Join extends React.Component {
 
     constructor(props) {

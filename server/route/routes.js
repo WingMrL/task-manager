@@ -3,6 +3,7 @@ var TeamController = require('../Controllers/TeamController');
 var ApplyController = require('../Controllers/ApplyController');
 var ProjectController = require('../Controllers/ProjectController');
 var TaskController = require('../Controllers/TaskController');
+var CommentController =require('../Controllers/CommentController');
 
 
 module.exports = function(app) {
@@ -25,6 +26,13 @@ module.exports = function(app) {
     app.get('/api/project/getProject', UserController.signinRequired, ProjectController.getProject);
 
     app.post('/api/task/newTask', UserController.signinRequired, TaskController.newTask);
+    app.post('/api/task/changeExecutorAndDeadLine', UserController.signinRequired, TaskController.changeExecutorAndDeadLine);
+    app.post('/api/task/toggleTaskFinish', UserController.signinRequired, TaskController.toggleTaskFinish);
+    app.get('/api/task/getTask', UserController.signinRequired, TaskController.getTask);
+    app.post('/api/task/editTaskNameAndTaskDescription', UserController.signinRequired, TaskController.editTaskNameAndTaskDescription);
+    app.post('/api/task/deleteTask', UserController.signinRequired, TaskController.deleteTask);
+
+    app.post('/api/comment/addComment', UserController.signinRequired, CommentController.addComment);
 
 
     /* GET home page. */

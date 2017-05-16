@@ -13,6 +13,12 @@ import Footer from '../Components/Footer/Footer';
 // import { addUser } from '../../actions/userActions';
 import { connect } from 'react-redux';
 
+/**
+ * @description 404页面
+ * 
+ * @class PageNotFound
+ * @extends {React.Component}
+ */
 class PageNotFound extends React.Component {
 
     constructor(props) {

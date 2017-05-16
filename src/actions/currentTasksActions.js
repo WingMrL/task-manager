@@ -1,5 +1,5 @@
 export const setCurrentTasks = (tasks) => {
-  console.log('asdfasdf');
+  // console.log('asdfasdf');
   return {
     type: 'SET_CURRENT_TASKS',
     tasks
@@ -7,9 +7,9 @@ export const setCurrentTasks = (tasks) => {
 };
 
 
-export const toggleTaskInCurrentTasks = (id) => {
+export const toggleTaskShowInCurrentTasks = (id) => {
     return {
-        type: 'TOGGLE_TASK_IN_CURRENT_TASKS',
+        type: 'TOGGLE_TASK_SHOW_IN_CURRENT_TASKS',
         id,
     };
 };
