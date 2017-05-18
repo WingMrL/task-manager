@@ -48,7 +48,7 @@ class JoinContent extends React.Component {
                     if(result.data.code === 0) {
                         dispatch(addUser(result.data.user));
                     } else if(result.data.code === -98) {
-                        history.push(`/user/sign_up`);
+                        history.push(`/user/sign_up`, [history.location.search]);
                     } else if(result.data.code === -1) {
                         console.log('请求参数错误!');
                     }

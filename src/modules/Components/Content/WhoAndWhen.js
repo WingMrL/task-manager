@@ -1,6 +1,6 @@
 import React from 'react';
 
-import { Card, Select, DatePicker, message } from 'antd';
+import { Card, Select, DatePicker, message, Tooltip } from 'antd';
 const Option = Select.Option;
 // import { Link } from 'react-router-dom';
 // import { connect } from 'react-redux';
@@ -104,7 +104,11 @@ class WhoAndWhen extends React.Component {
                     className={`who-and-when`}
                     onClick={this.handleWhoAndWhenOnClick}
                     >
-                    <span className={`who`}>{who}</span>
+                    <Tooltip
+                        title={who}
+                        >
+                        <span className={`who`}>{who.length > 5 ? `${who.slice(0, 5)}...` : who}</span>
+                    </Tooltip>
                     <span> · </span>
                     <span className={`when`}>{when}</span>
                 </div>

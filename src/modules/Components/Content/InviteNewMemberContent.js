@@ -6,9 +6,9 @@ import { Input } from 'antd';
 import { Link } from 'react-router-dom';
 import { connect } from 'react-redux';
 import './InviteNewMemberContent.less';
-// import axios from 'axios';
+import axios from 'axios';
 import config from '../../../../config/config';
-// import { addUser } from '../../../actions/userActions';
+import { setCurrentTeam } from '../../../actions/currentTeamActions';
 // import '../../../assets/style.less';
 
 
@@ -17,7 +17,60 @@ class InviteNewMemberContent extends React.Component {
 
     handleResetInviteLink = (e) => {
         e.preventDefault();
-        console.log('此功能还没有实现');
+        const { currentTeam, history } = this.props;
+        let teamId;
+        if(currentTeam) {
+            teamId = currentTeam._id;
+        }
+        if(teamId) {
+            const token = localStorage.getItem('token');
+            axios.post(`${config.serverHost}/api/team/refreshJoinId`, {
+                token,
+                teamId,
+            }).then((result) => {
+                let { data } = result;
+                if(data.code == 0) {
+                    this.getTeam(currentTeam._id);
+                } else if(data.code == -98) {
+                    history.push(`/user/sign_in`);
+                } else if(data.code == -1 || data.code == -4) {
+                    console.log(`${data.msg}: ${data.code}`);
+                }
+            })
+        }
+    }
+
+    getTeam = (teamId) => {
+        const url = `${config.serverHost}/api/team/getTeam`;
+        const { history, dispatch } = this.props;
+        const token = localStorage.getItem('token');
+        const userId = localStorage.getItem('userId');
+        if(token === null || userId === null) {
+            history.push(`/user/sign_in`);
+        } else {
+            if(teamId) {
+                const data = {
+                    params: {
+                        teamId,
+                        token
+                    }
+                };
+                axios.get(url, data)
+                    .then((result) => {
+                        if(result.data.code === 0) {
+                            let { team } = result.data;
+                            dispatch(setCurrentTeam(team));
+                        } else if(result.data.code === -98) {
+                            history.push(`/user/sign_in`);
+                        } else if(result.data.code === -1) {
+                            console.log(`${result.data.msg}: ${result.data.code}`)
+                        }
+                    })
+                    .catch((err) => {
+                        console.log(err);
+                    });
+            }
+        }
     }
 
     render() {

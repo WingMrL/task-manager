@@ -55,35 +55,38 @@ class JoinApprovalContent extends React.Component {
             teamId = currentTeam._id;
         }
         let token = localStorage.getItem('token');
-        let length = checkedApplyMembers.length;
-        let count = length;
-        if(length === 0) {
+        if(checkedApplyMembers.length === 0) {
             message.warning(`审批前请选择相应的成员！`);
             return ;
         }
-        checkedApplyMembers.forEach((v) => {
-            axios.post(`${config.serverHost}/api/apply/approvalApply`, {
-                    token,
-                    applyId: v._id,
-                    applyingUserId: v.apply.applyingUser._id,
-                    applyingTeamId: v.apply.applyingTeam._id,
-                })
-                .then((result) => {
-                    let { data } = result;
-                    if(data.code === 0) {
-                        dispatch(removeApplyMember(v._id));
-                        count --;
-                        if(count === 0) {
-                            history.push(`/teams/${teamId}/members`);
-                        }
-                    } else if(data.code === -98) {
-                        history.push(`/user/sign_in`);
-                    }
-                })
-                .catch((err) => {
-                    console.log(err);
-                })
+        
+        let appliesId = [];
+        let applyingUsersId = [];
+        checkedApplyMembers.forEach((member) => {
+            appliesId.push(member._id);
+            applyingUsersId.push(member.apply.applyingUser._id);
         });
+        axios.post(`${config.serverHost}/api/apply/approvalApply`, {
+                token,
+                appliesId,
+                applyingUsersId,
+                applyingTeamId: checkedApplyMembers[0].apply.applyingTeam._id, //都是申请同一个team，所以用[0]就可以了。
+            })
+            .then((result) => {
+                let { data } = result;
+                if(data.code === 0) {
+                    checkedApplyMembers.forEach((v) => {
+                        dispatch(removeApplyMember(v._id));
+                    });
+                    history.push(`/teams/${teamId}/members`);
+                } else if(data.code === -98) {
+                    history.push(`/user/sign_in`);
+                }
+            })
+            .catch((err) => {
+                console.log(err);
+            });
+        
     }
 
     handleApprovalRejectOnClick = (e) => {

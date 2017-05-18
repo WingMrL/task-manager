@@ -16,6 +16,12 @@ import { setCurrentTask } from '../../../actions/currentTaskActions';
 
 
 
+/**
+ * @description 任务详情页
+ * 
+ * @class TaskContent
+ * @extends {React.Component}
+ */
 class TaskContent extends React.Component {
 
     state = {
@@ -424,6 +430,7 @@ class TaskContent extends React.Component {
                         when={when}
                         members={members}
                         taskId={taskId}
+                        clickable={!finished}
                         style={{
                             marginLeft: '10px',
                         }}
@@ -437,8 +444,9 @@ class TaskContent extends React.Component {
                         to={`/`} 
                         onClick={this.handleEditTaskNameAndDesc}
                         style={{
-                            color: '#71a7ce',
+                            color: finished ? '#ccc' : '#71a7ce',
                         }}
+                        disabled={finished}
                         >
                         编辑
                     </Link>

@@ -27,9 +27,12 @@ class NewProjectsContent extends React.Component {
     }
 
     componentWillMount() {
-        const { currentTeam, dispatch } = this.props;
+        const { currentTeam, dispatch, user } = this.props;
         if(currentTeam) {
-            let choosingProjectMembers = [...currentTeam.managers, ...currentTeam.normalMembers];
+            let choosingProjectMembers = [...currentTeam.managers, ...currentTeam.normalMembers, currentTeam.superManager];
+            choosingProjectMembers = choosingProjectMembers.filter((member) => {
+                return member._id != user._id;
+            });
             dispatch(addAllChoosingProjectMembers(choosingProjectMembers));
         }
     }

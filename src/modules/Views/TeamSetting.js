@@ -8,15 +8,15 @@ import FooterContainer from '../Layout/FooterContainer';
 import Footer from '../Components/Footer/Footer';
 
 import CommonHeaderContent  from '../Components/Header/CommonHeaderContent';
-import InviteNewMemberContent from '../Components/Content/InviteNewMemberContent';
+import TeamSettingContent from '../Components/Content/TeamSettingContent';
 
 /**
- * @description 邀请好友
+ * @description 团队帐户设置页
  * 
- * @class InviteNewMember
+ * @class TeamSetting
  * @extends {React.Component}
  */
-class InviteNewMember extends React.Component {
+class TeamSetting extends React.Component {
 
     constructor(props) {
         super(props);
@@ -25,6 +25,7 @@ class InviteNewMember extends React.Component {
     render() {
         const { history } = this.props;
         const { teamId } = this.props.match.params;
+        // console.log(history);
         return (
             <LayoutMain>
                 <HeaderContainer>
@@ -35,7 +36,7 @@ class InviteNewMember extends React.Component {
                         />
                 </HeaderContainer>
                 <ContentContainer>
-                    <InviteNewMemberContent 
+                    <TeamSettingContent 
                         history={history}
                         />
                 </ContentContainer>
@@ -47,4 +48,4 @@ class InviteNewMember extends React.Component {
     }
 }
 
-export default InviteNewMember;
+export default TeamSetting;

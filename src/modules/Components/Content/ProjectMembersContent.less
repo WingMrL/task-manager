@@ -1,0 +1,113 @@
+.custom-ant-layout-content { 
+.content-container {
+.project-members-content-container {
+    width: 1100px;
+    min-height: 600px;
+    background-color: #f7f7f7;
+    border: 1px solid #e7e7e7;
+    margin: 4px 0;
+    padding: 30px;
+    box-shadow: 0 1px 6px rgba(0, 0, 0, .2);
+
+    .header {
+        margin-top: 10px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        
+        .title {
+            font-size: 20px;
+        }
+
+        .quit-project {
+            color: #cc8065;
+        }
+    }
+        
+    .members-container {
+        width: 100%;
+        margin-top: 30px;
+        display: flex;
+        justify-content: flex-start;
+        flex-wrap: wrap;
+
+        .link {
+            height: 50px;
+            width: 346px;
+            display: flex;
+            justify-content: flex-start;
+            align-items: center;
+
+            .head-img {
+                width: 50px;
+                height: 50px;
+                display: block;
+                border-radius: 100%;
+            }
+
+            .info-container {
+                width: 260px;
+                height: 50px;
+                margin-left: 20px;
+                display: flex;
+                flex-flow: column;
+                
+                .user-name {
+                        height: 20px;
+                        display: block;
+                        line-height: 20px;
+                        font-size: 16px;
+                        font-weight: 500;
+                        color: #666;
+                }
+
+                .role {
+                        height: 20px;
+                        display: block;
+                        line-height: 20px;
+                        margin-top: 5px;
+                        font-size: 14px;
+                        color: #999;
+                }
+
+                .super-manager {
+                    color: #f68539;
+                }
+            }
+        }
+
+        .link:hover {
+
+            .head-img {
+                box-shadow: 0 1px 16px rgba(0, 0, 0, .4);
+            }
+        }
+
+        .link:nth-child(n+4) {
+            margin-top: 30px;
+        }
+   }
+}
+}
+}
+
+.quit-project-confirm-modal {
+    .ant-modal {
+        position: absolute;
+        width: 520px;
+        height: 300px;
+        top: 50%;
+        left: 50%;
+        margin-left: -260px;
+        margin-top: -150px;
+
+        .ant-modal-title {
+            font-size: 20px;
+        }
+
+        .text {
+            font-size: 16px;
+            text-align: center;
+        }
+    }
+}

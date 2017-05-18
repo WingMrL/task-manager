@@ -11,6 +11,12 @@ import '../../../assets/style.less';
 
 
 
+/**
+ * @description 团队创建与管理
+ * 
+ * @class TeamsContent
+ * @extends {React.Component}
+ */
 class TeamsContent extends React.Component {
 
     state = {

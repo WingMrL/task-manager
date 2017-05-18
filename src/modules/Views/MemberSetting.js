@@ -8,15 +8,9 @@ import FooterContainer from '../Layout/FooterContainer';
 import Footer from '../Components/Footer/Footer';
 
 import CommonHeaderContent  from '../Components/Header/CommonHeaderContent';
-import InviteNewMemberContent from '../Components/Content/InviteNewMemberContent';
+import MemberSettingContent from '../Components/Content/MemberSettingContent';
 
-/**
- * @description 邀请好友
- * 
- * @class InviteNewMember
- * @extends {React.Component}
- */
-class InviteNewMember extends React.Component {
+class MemberSetting extends React.Component {
 
     constructor(props) {
         super(props);
@@ -35,7 +29,7 @@ class InviteNewMember extends React.Component {
                         />
                 </HeaderContainer>
                 <ContentContainer>
-                    <InviteNewMemberContent 
+                    <MemberSettingContent 
                         history={history}
                         />
                 </ContentContainer>
@@ -47,4 +41,4 @@ class InviteNewMember extends React.Component {
     }
 }
 
-export default InviteNewMember;
+export default MemberSetting;

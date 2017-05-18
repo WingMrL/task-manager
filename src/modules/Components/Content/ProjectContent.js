@@ -14,7 +14,7 @@ import { setCurrentTasks, toggleTaskShowInCurrentTasks } from '../../../actions/
 
 
 /**
- * @description 项目列表的内容
+ * @description 项目详情页，即任务列表的内容
  * 
  * @class ProjectContent
  * @extends {React.Component}
@@ -154,11 +154,15 @@ class ProjectContent extends React.Component {
      * @memberof ProjectContent
      */
     handleAddNewTaskOk = (e) => {
-        const { newTaskName, when, who } = this.state;
+        const { newTaskName, when, who, whoAndWhenSettingVisible } = this.state;
         const { projectId, currentProject, history } = this.props;
 
         if(newTaskName == '') {
             message.error(`任务名称不能为空！`, 3);
+            return;
+        }
+        if(whoAndWhenSettingVisible == true) {
+            message.error(`请关闭指派面板，以确定指派者和截止日期！`, 3);
             return;
         }
 
@@ -255,6 +259,7 @@ class ProjectContent extends React.Component {
         const { newTaskName, addingNewTask, whoAndWhenSettingVisible, who, when } = this.state;
         let unfinishTasks = 0; //未完成的任务数量
         let projectName = ''; // 项目的名称
+        let projectDescription = ''; // 项目的描述
         let projectMembersNum = 0; //项目的成员数量
         let projectId = ''; // 项目的id
         let members = []; // 成员 UserModal
@@ -262,6 +267,7 @@ class ProjectContent extends React.Component {
         let finishedTaskList = []; // 已完成的任务列表
         if(currentProject) {
             projectName = currentProject.projectName;
+            projectDescription = currentProject.description;
             projectMembersNum = currentProject.members.length;
             projectId = currentProject._id;
             members = currentProject.members;
@@ -345,16 +351,19 @@ class ProjectContent extends React.Component {
         return (
             <div className={`project-content-container`}>
                 <div className={`project-header`}>
-                    <h2 className={`title`}>{projectName}</h2>
+                    <div>
+                        <h2 className={`title`}>{projectName}</h2>
+                        <pre className={`project-description`}>{projectDescription}</pre>
+                    </div>
                     <div className={`summary`}>
                         <div className={`unfinish-tasks`}>
                             <span className={`num`}>{unfinishTasks}</span>
                             <span className={`text`}>待处理任务</span>
                         </div>
-                        <div className={`members-info`}>
+                        <Link className={`members-info`} to={`/projects/${projectId}/members`}>
                             <span className={`num`}>{projectMembersNum}</span>
                             <span className={`text`}>成员</span>
-                        </div>
+                        </Link>
                         <Link className={`setting`} to={`/projects/${projectId}/settings`}>
                             <Icon type="setting" className={`icon`}/>
                             <span className={`text`}>设置</span>

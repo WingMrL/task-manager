@@ -157,7 +157,7 @@ class SignUpContent extends React.Component {
                             }, {
                                 validator: (rule, value, callback) => {
                                     let errors = [];
-                                    if(value.slice(-1) == ' ') {
+                                    if(value && value.slice(-1) == ' ') {
                                         errors.push(new Error('密码不能包含空格'));
                                     }
                                     callback(errors);

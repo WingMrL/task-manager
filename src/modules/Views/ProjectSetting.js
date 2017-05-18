@@ -8,15 +8,15 @@ import FooterContainer from '../Layout/FooterContainer';
 import Footer from '../Components/Footer/Footer';
 
 import CommonHeaderContent  from '../Components/Header/CommonHeaderContent';
-import InviteNewMemberContent from '../Components/Content/InviteNewMemberContent';
+import ProjectSettingContent from '../Components/Content/ProjectSettingContent';
 
 /**
- * @description 邀请好友
+ * @description 项目设置页
  * 
- * @class InviteNewMember
+ * @class ProjectSetting
  * @extends {React.Component}
  */
-class InviteNewMember extends React.Component {
+class ProjectSetting extends React.Component {
 
     constructor(props) {
         super(props);
@@ -24,19 +24,19 @@ class InviteNewMember extends React.Component {
 
     render() {
         const { history } = this.props;
-        const { teamId } = this.props.match.params;
+        const { projectId } = this.props.match.params;
         return (
             <LayoutMain>
                 <HeaderContainer>
                     <CommonHeaderContent 
                         history={history}
-                        teamId={teamId}
-                        selectedKeys={['teams']}
+                        selectedKeys={['projects']}
                         />
                 </HeaderContainer>
                 <ContentContainer>
-                    <InviteNewMemberContent 
+                    <ProjectSettingContent 
                         history={history}
+                        projectId={projectId}
                         />
                 </ContentContainer>
                 <FooterContainer>
@@ -47,4 +47,4 @@ class InviteNewMember extends React.Component {
     }
 }
 
-export default InviteNewMember;
+export default ProjectSetting;

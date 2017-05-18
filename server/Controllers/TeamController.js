@@ -15,6 +15,40 @@ let uuidV1 = require('uuid/v1');
 // code: -5, msg: already in
 // code: -98, msg: need signin
 
+exports.changeTeamName = function(req, res) {
+    let { teamId, teamName } = req.body;
+};
+
+// refresh joinId
+exports.refreshJoinId = function(req, res) {
+    let { teamId } = req.body;
+    if(!teamId) {
+        res.json({
+            code: 0,
+            msg: 'params error',
+        });
+        return;
+    }
+    TeamModal.findOne({ _id: teamId })
+        .exec()
+        .then((foundTeam) => {
+            foundTeam.joinId = uuidV1();
+            foundTeam.save()
+                .then((savedTeam) => {
+                    res.json({
+                        code: 0,
+                        msg: 'ok',
+                    })
+                })
+                .catch((err) => {
+                    console.log(err);
+                })
+        })
+        .catch((err) => {
+            console.log(err);
+        });
+};
+
 // newTeam
 exports.newTeam = function(req, res) {
     let { teamName, userId } = req.body;

@@ -10,14 +10,18 @@
 
     .project-header {
         width: 100%;
-        height: 82px;
+        min-height: 82px;
         padding: 20px 40px;
         display: flex;
         justify-content: space-between;
-        align-items: center;
+        align-items: flex-start;
 
         .title {
             font-size: 30px;
+        }
+
+        .project-description {
+            max-width: 760px;
         }
 
         .summary {
@@ -50,7 +54,8 @@
                 }
             }
 
-            .setting:hover {
+            .setting:hover,
+            .members-info:hover {
                 color: #108ee9;
             }
             

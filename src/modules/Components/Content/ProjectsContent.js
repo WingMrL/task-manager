@@ -11,6 +11,12 @@ import config from '../../../../config/config';
 
 
 
+/**
+ * @description 项目列表页
+ * 
+ * @class ProjectsContent
+ * @extends {React.Component}
+ */
 class ProjectsContent extends React.Component {
 
     render() {

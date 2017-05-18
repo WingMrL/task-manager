@@ -37,7 +37,6 @@ class HomePage extends React.Component {
                         </Link>
                     </div>
                 }
-                <Link to={`/join?t=f99f6940-308f-11e7-88b2-2b9d07656175`}>join</Link>
             </div>
         );
     }

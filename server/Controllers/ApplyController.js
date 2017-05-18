@@ -18,62 +18,71 @@ let parallel = require('async/parallel');
 
 
 exports.approvalApply = function(req, res) {
-    let { applyId, applyingUserId, applyingTeamId } = req.body;
-    parallel({
-        user: (callback) => {
-            UserModal.findOne({ _id: applyingUserId })
-                .exec()
-                .then((foundUser) => {
-                    foundUser.applies.pull({ _id: applyId });
-                    foundUser.teams.addToSet(applyingTeamId);
-                    foundUser.save()
-                        .then((savedUser) => {
-                            callback(null, savedUser);
+    let { appliesId, applyingUsersId, applyingTeamId } = req.body;
+    
+    function save(i) {
+        debugger;
+        if(appliesId[i] != undefined) {
+            parallel({
+                user: (callback) => {
+                    UserModal.findOne({ _id: applyingUsersId[i] })
+                        .exec()
+                        .then((foundUser) => {
+                            foundUser.applies.pull({ _id: appliesId[i] });
+                            foundUser.teams.addToSet(applyingTeamId);
+                            foundUser.save()
+                                .then((savedUser) => {
+                                    callback(null, savedUser);
+                                })
+                                .catch((err) => {
+                                    console.log(err);
+                                });
                         })
                         .catch((err) => {
                             console.log(err);
                         });
-                })
-                .catch((err) => {
-                    console.log(err);
-                });
-        },
-        team: (callback) => {
-            TeamModal.findOne({ _id: applyingTeamId })
-                .exec()
-                .then((foundTeam) => {
-                    foundTeam.applies.pull({ _id: applyId });
-                    foundTeam.normalMembers.addToSet(applyingUserId);
-                    foundTeam.save()
-                        .then((savedTeam) => {
-                            callback(null, savedTeam);
+                },
+                team: (callback) => {
+                    TeamModal.findOne({ _id: applyingTeamId })
+                        .exec()
+                        .then((foundTeam) => {
+                            foundTeam.applies.pull({ _id: appliesId[i] });
+                            foundTeam.normalMembers.addToSet(applyingUsersId[i]);
+                            foundTeam.save()
+                                .then((savedTeam) => {
+                                    callback(null, savedTeam);
+                                })
+                                .catch((err) => {
+                                    console.log(err);
+                                });
                         })
                         .catch((err) => {
                             console.log(err);
                         });
-                })
-                .catch((err) => {
-                    console.log(err);
-                });
-        },
-        apply: (callback) => {
-            ApplyModal.remove({ _id: applyId })
-                .exec()
-                .then((result) => {
-                    callback(null, result);
-                })
-                .catch((err) => {
-                    console.log(err);
-                })
-                
-        },
-    }, (err, result) => {
-        res.json({
-            code: 0,
-            msg: 'ok',
-            result,
-        });
-    });
+                },
+                apply: (callback) => {
+                    ApplyModal.remove({ _id: appliesId[i] })
+                        .exec()
+                        .then((result) => {
+                            callback(null, result);
+                        })
+                        .catch((err) => {
+                            console.log(err);
+                        })
+                        
+                },
+            }, (err, result) => {
+                save(++i);
+            });
+        } else {
+            res.json({
+                code: 0,
+                msg: 'ok',
+            });
+        }
+    }
+
+    save(0);
 };
 
 exports.rejectApply = function(req, res) {

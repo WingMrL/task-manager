@@ -91,10 +91,16 @@ exports.deleteTask = function(req, res) {
                         });
                     }
                 }, (err, result) => {
-                    res.json({
-                        code: 0,
-                        msg: 'ok',
-                    });
+                    TaskModal.remove({ _id: taskId })
+                        .then(() => {
+                            res.json({
+                                code: 0,
+                                msg: 'ok',
+                            });
+                        })
+                        .catch((err) => {
+                            console.log(err);
+                        });
                 });
             } else {
                 res.json({
