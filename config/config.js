@@ -1,8 +1,8 @@
 let path = require('path');
 
-const SERVER_HOST = '192.168.0.100';
+const SERVER_HOST = '192.168.0.102';
 const SERVER_PORT = '3000';
-const DATABASE_HOST = '192.168.0.100';
+const DATABASE_HOST = '192.168.0.102';
 const DATABASE_PORT = '27017';
 const DATABASE_NAME = 'task_manager';
 const DATABASE_USER ='';

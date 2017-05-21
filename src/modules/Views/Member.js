@@ -18,7 +18,7 @@ class Member extends React.Component {
 
     render() {
         const { history } = this.props;
-        const { teamId } = this.props.match.params;
+        const { teamId, userId } = this.props.match.params;
         return (
             <LayoutMain>
                 <HeaderContainer>
@@ -29,7 +29,10 @@ class Member extends React.Component {
                         />
                 </HeaderContainer>
                 <ContentContainer>
-                    <MemberContent />
+                    <MemberContent 
+                        history={history}
+                        getTasksUserId={userId}
+                        />
                 </ContentContainer>
                 <FooterContainer>
                     <Footer />

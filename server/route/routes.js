@@ -12,9 +12,11 @@ module.exports = function(app) {
     app.get('/api/checkSignIn', UserController.checkSignIn);
 
     app.get('/api/user/getUser', UserController.signinRequired, UserController.getUser);
+    app.get('/api/user/getUserTasks', UserController.signinRequired, UserController.getUserTasks);
     app.post('/api/user/changePassword', UserController.signinRequired, UserController.changePassword);
     app.post('/api/user/changeUserName', UserController.signinRequired, UserController.changeUserName);
     app.post('/api/user/quitProject', UserController.signinRequired, UserController.quitProject);
+    app.post('/api/user/changeRole', UserController.signinRequired, UserController.changeRole);
     app.post('/api/user/headimg', UploadHeadImg.single('headimg'), UserController.signinRequired ,UserController.changeHeadImgUrl);
     app.post('/api/user/signup', UserController.signup);
     app.post('/api/user/signin', UserController.signin);
@@ -23,6 +25,7 @@ module.exports = function(app) {
     app.get('/api/team/getTeam', UserController.signinRequired, TeamController.getTeam);
     app.get('/api/team/getTeamByJoinId', TeamController.getTeamByJoinId);
     app.post('/api/team/refreshJoinId', UserController.signinRequired, TeamController.refreshJoinId);
+    app.post('/api/team/changeTeamName', UserController.signinRequired, TeamController.changeTeamName);
 
     app.post('/api/apply/applyJoinIn', UserController.signinRequired, ApplyController.applyJoinIn);
     app.post('/api/apply/rejectApply', UserController.signinRequired, ApplyController.rejectApply);

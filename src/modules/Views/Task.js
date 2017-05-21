@@ -34,6 +34,7 @@ class Task extends React.Component {
                         taskId={taskId}
                         projectId={projectId}
                         history={history}
+                        teamId={teamId}
                         />
                 </ContentContainer>
                 <FooterContainer>

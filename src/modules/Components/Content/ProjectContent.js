@@ -255,8 +255,9 @@ class ProjectContent extends React.Component {
     }
 
     render() {
-        const { history, currentProject, currentTasks } = this.props;
+        const { history, currentProject, currentTasks, currentTeam, user } = this.props;
         const { newTaskName, addingNewTask, whoAndWhenSettingVisible, who, when } = this.state;
+
         let unfinishTasks = 0; //未完成的任务数量
         let projectName = ''; // 项目的名称
         let projectDescription = ''; // 项目的描述
@@ -272,6 +273,15 @@ class ProjectContent extends React.Component {
             projectId = currentProject._id;
             members = currentProject.members;
         }
+
+        let isManager = false;
+        if(currentTeam) {
+            let managersId = currentTeam.managers.map(v => v._id);
+            if(managersId.indexOf(user._id) > -1 || user._id == currentTeam.superManager._id) {
+                isManager = true;
+            }
+        }
+
         if(currentTasks) {
             currentTasks.forEach((v) => {
                 
@@ -364,10 +374,14 @@ class ProjectContent extends React.Component {
                             <span className={`num`}>{projectMembersNum}</span>
                             <span className={`text`}>成员</span>
                         </Link>
-                        <Link className={`setting`} to={`/projects/${projectId}/settings`}>
-                            <Icon type="setting" className={`icon`}/>
-                            <span className={`text`}>设置</span>
-                        </Link>
+                        {
+                            isManager &&
+                            <Link className={`setting`} to={`/projects/${projectId}/settings`}>
+                                <Icon type="setting" className={`icon`}/>
+                                <span className={`text`}>设置</span>
+                            </Link>
+                        }
+                        
                     </div>
                 </div>
                 <div className={`project`}>

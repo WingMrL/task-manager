@@ -22,7 +22,7 @@ class WhoAndWhen extends React.Component {
     }
 
     handleWhoAndWhenOnClick = () => {
-        const { who, when, whoAndWhenSettingVisible, members, taskId, clickable } = this.props;
+        const { who, when, whoAndWhenSettingVisible, members, taskId, clickable, project } = this.props;
 
         if(clickable != undefined && clickable == false) {
             return;
@@ -47,15 +47,15 @@ class WhoAndWhen extends React.Component {
 
             let membersName = members.map(v => v.userName);
             let settingWho = membersName.indexOf(currentWho) > -1 ? currentWho : '未指派'; //是否能在members中找到对应的名字
-            let settingWhen = currentWhen == '' ? '没有截止日期' : currentWhen;
-            
+            let settingWhen = currentWhen == null ? '没有截止日期' : currentWhen.format('YYYY-MM-DD');
+
             if(settingWho == '未指派' && settingWhen != '没有截止日期') {
                 message.warning(`选择日期之前，请先指派!`, 3);
                 return;
             }
             // debugger;
             // 设置 指派 和 截止时间
-            this.props.handleSettingWhoAndWhen(settingWho, settingWhen, taskId);
+            this.props.handleSettingWhoAndWhen(settingWho, settingWhen, taskId, project);
         }
 
         // 显示或者隐藏 面板
@@ -71,7 +71,7 @@ class WhoAndWhen extends React.Component {
 
     handleDataOnChange = (date, dateString) => {
         this.setState({
-            currentWhen: dateString,
+            currentWhen: date,
             isChange: true,
         });
     }
@@ -81,8 +81,7 @@ class WhoAndWhen extends React.Component {
         let { who, when, members, whoAndWhenSettingVisible, style, clickable} = this.props;
         let { currentWhen, currentWho } = this.state;
 
-        let currentWhenMoment = currentWhen == null ? currentWhen : moment(currentWhen);
-
+        // let currentWhenMoment = currentWhen ;
         const memberOptions = members.map((v) => {
             return <Option value={v.userName} key={v._id}>{v.userName}</Option>
         });
@@ -124,7 +123,7 @@ class WhoAndWhen extends React.Component {
                     <span className={`text`}>任务截止日期</span>
                     <DatePicker 
                         onChange={this.handleDataOnChange}
-                        value={currentWhenMoment}/>
+                        value={currentWhen}/>
                 </div>
             </div>
         );

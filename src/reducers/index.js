@@ -7,6 +7,7 @@ import currentProject from './currentProjectReducer';
 import applyMembers from './applyMembersReducer';
 import choosingProjectMembers from './choosingProjectMembersReducer';
 import currentTasks from './currentTasksReducer';
+import userTasks from './userTasksReducer';
 
 const TaskManagerApp = combineReducers({
   hasSignIn,
@@ -16,7 +17,8 @@ const TaskManagerApp = combineReducers({
   choosingProjectMembers,
   currentProject,
   currentTasks,
-  currentTask
+  currentTask,
+  userTasks
 });
 
 export default TaskManagerApp;

@@ -7,7 +7,7 @@ import './TeamSettingContent.less';
 import axios from 'axios';
 import config from '../../../../config/config';
 import moment from 'moment';
-// import { addUser } from '../../../actions/userActions';
+import { setCurrentTeam } from '../../../actions/currentTeamActions';
 // import '../../../assets/style.less';
 
 
@@ -116,6 +116,10 @@ class TeamSettingContent extends React.Component {
                 let { data } = result;
                 if(data.code == 0) {
                     this.getTeam(currentTeam._id);
+                    this.setState({
+                        newTeamName: '',
+                        modifyTeamModalVisible: false,
+                    });
                 } else if(data.code == -98) {
                     history.push(`/user/sign_in`);
                 } else if(data.code == -1 || data.code == -4) {
@@ -135,6 +139,14 @@ class TeamSettingContent extends React.Component {
         this.setState({
             deleteTeamConfirmModalVisible: false,
         });
+    }
+
+    /**
+     * @description 删除团队确认modal的onOk事件
+     * @memberof TeamSettingContent
+     */
+    handleDeleteTeamModalOnOk = (e) => {
+        console.log('删除团队...');
     }
 
     /**
@@ -204,6 +216,10 @@ class TeamSettingContent extends React.Component {
                     onOk={this.handleDeleteTeamModalOnOk}
                     wrapClassName={`delete-team-modal`}
                     >
+                    <p className="text">如果你和你的团队成员，从今往后都不再需要访问该团队的信息，可以删除团队账户。</p>
+                    <p className="text" style={{
+                        color: '#cc0816',
+                    }}>确定删除吗？</p>
                 </Modal>
             </div>
         );

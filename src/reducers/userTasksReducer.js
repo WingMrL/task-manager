@@ -1,6 +1,6 @@
-const currentTasksReducer = (state = [], action) => {
+const userTasksReducer = (state = [], action) => {
   switch (action.type) {
-    case 'SET_CURRENT_TASKS':
+    case 'SET_USER_TASKS':
       return action.tasks.map((v) => {
               return {
                   _id: v._id,
@@ -8,7 +8,7 @@ const currentTasksReducer = (state = [], action) => {
                   task: Object.assign({}, v)
               };
           });
-    case 'TOGGLE_TASK_SHOW_IN_CURRENT_TASKS':
+    case 'TOGGLE_TASK_SHOW_IN_USER_TASKS':
       return state.map((v) => {
               if(v._id == action.id) {
                   return Object.assign({}, v, {
@@ -23,4 +23,4 @@ const currentTasksReducer = (state = [], action) => {
   }
 };
 
-export default currentTasksReducer;
+export default userTasksReducer;

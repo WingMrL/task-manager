@@ -17,6 +17,38 @@ let uuidV1 = require('uuid/v1');
 
 exports.changeTeamName = function(req, res) {
     let { teamId, teamName } = req.body;
+    if(!teamId || !teamName) {
+        res.json({
+            code: -1,
+            msg: 'params error',
+        });
+        return;
+    }
+    TeamModal.findOne({ _id: teamId })
+        .exec()
+        .then((foundTeam) => {
+            if(foundTeam) {
+                foundTeam.teamName = teamName;
+                foundTeam.save()
+                    .then((savedTeam) => {
+                        res.json({
+                            code: 0,
+                            msg: 'ok',
+                        });
+                    })
+                    .catch((err) => {
+                        console.log(err);
+                    });
+            } else {
+                res.json({
+                    code: -4,
+                    msg: 'team not found',
+                });
+            }
+        })
+        .catch((err) => {
+            console.log(err);
+        })
 };
 
 // refresh joinId

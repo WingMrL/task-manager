@@ -11,6 +11,7 @@ import moment from 'moment';
 import config from '../../../../config/config';
 import WhoAndWhen from './WhoAndWhen';
 import { setCurrentTask } from '../../../actions/currentTaskActions';
+import { setCurrentTeam } from '../../../actions/currentTeamActions';
 // import '../../../assets/style.less';
 
 
@@ -36,6 +37,7 @@ class TaskContent extends React.Component {
     
     componentWillMount() {
         this.getTask();
+        this.getTeam(this.props.teamId);
     }
 
     /**
@@ -65,6 +67,39 @@ class TaskContent extends React.Component {
             .catch((err) => {
                 console.log(err);
             });
+        }
+    }
+
+    getTeam = (teamId) => {
+        const url = `${config.serverHost}/api/team/getTeam`;
+        const { history, dispatch } = this.props;
+        const token = localStorage.getItem('token');
+        const userId = localStorage.getItem('userId');
+        if(token === null || userId === null) {
+            history.push(`/user/sign_in`);
+        } else {
+            if(teamId) {
+                const data = {
+                    params: {
+                        teamId,
+                        token
+                    }
+                };
+                axios.get(url, data)
+                    .then((result) => {
+                        if(result.data.code === 0) {
+                            let { team } = result.data;
+                            dispatch(setCurrentTeam(team));
+                        } else if(result.data.code === -98) {
+                            history.push(`/user/sign_in`);
+                        } else if(result.data.code === -1) {
+                            console.log(`${result.data.msg}: ${result.data.code}`)
+                        }
+                    })
+                    .catch((err) => {
+                        console.log(err);
+                    });
+            }
         }
     }
 

@@ -236,6 +236,7 @@ exports.changeExecutorAndDeadLine = function(req, res) {
     TaskModal.findOne({ _id: taskId })
         .exec()
         .then((foundTask) => {
+            let originalExecutor = foundTask.executor;
             foundTask.executor = executorId;
             foundTask.deadLine = deadLine;
             parallel({
@@ -249,36 +250,57 @@ exports.changeExecutorAndDeadLine = function(req, res) {
                         });
                 },
                 saveUser: (callback) => {
-                    let execIdForFinding = executorId == undefined ? foundTask.executor : executorId;
-                    if(execIdForFinding) {
-                        UserModal.findOne({ _id: execIdForFinding })
-                            .exec()
-                            .then((foundUser) => {
-                                if(executorId) {
-                                    foundUser.tasks.addToSet(taskId);
-                                } else {
-                                    foundUser.tasks.pull(taskId);
-                                }
-                                foundUser.save()
-                                    .then((savedUser) => {
-                                        callback(null, savedUser);
+                    parallel([
+                        (callback01) => {
+                            if(originalExecutor != executorId) {
+                                 UserModal.findOne({ _id: originalExecutor })
+                                    .exec()
+                                    .then((foundUser) => {
+                                        foundUser.tasks.pull(taskId);
+                                        foundUser.save()
+                                            .then((savedUser) => {
+                                                callback01(null, savedUser);
+                                            })
+                                            .catch((err) => {
+                                                console.log(err);
+                                            })
                                     })
                                     .catch((err) => {
                                         console.log(err);
                                     })
-                            })
-                            .catch((err) => {
-                                console.log(err);
-                            })
-                    } else {
-                        callback(null, undefined);
-                    }
+                            } else {
+                                callback01(null, null);
+                            }
+                        },
+                        (callback01) => {
+                            if(executorId) {
+                                 UserModal.findOne({ _id: executorId })
+                                    .exec()
+                                    .then((foundUser) => {
+                                        foundUser.tasks.addToSet(taskId);
+                                        foundUser.save()
+                                            .then((savedUser) => {
+                                                callback01(null, savedUser);
+                                            })
+                                            .catch((err) => {
+                                                console.log(err);
+                                            })
+                                    })
+                                    .catch((err) => {
+                                        console.log(err);
+                                    })
+                            } else {
+                                callback01(null, null);
+                            }
+                        }
+                    ], (err, result) => {
+                        callback(null, result);
+                    });
                 }
             }, (err, result) => {
                 res.json({
                     code: 0,
                     msg: 'ok',
-                    result
                 });
             });
         })

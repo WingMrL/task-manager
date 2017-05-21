@@ -19,6 +19,47 @@ let parallel = require('async/parallel');
 // code: -6, msg: wrong old password
 // code: -98, msg: need signin
 
+exports.changeRole = function(req, res) {
+    let { teamId, userId, isChangeToManager } = req.body;
+    if(!teamId || !userId || isChangeToManager == undefined) {
+        res.json({
+            code: -1,
+            msg: 'params error',
+        });
+        return;
+    }
+    TeamModal.findOne({ _id: teamId })
+        .exec()
+        .then((foundTeam) => {
+            if(foundTeam) {
+                if(isChangeToManager) {
+                    foundTeam.managers.addToSet(userId);
+                    foundTeam.normalMembers.pull(userId);
+                } else {
+                    foundTeam.managers.pull(userId);
+                    foundTeam.normalMembers.addToSet(userId);
+                }
+                foundTeam.save()
+                    .then((savedTeam) => {
+                        res.json({
+                            code: 0,
+                            msg: 'ok',
+                        })
+                    })
+                    .catch((err) => {
+                        console.log(err);
+                    })
+            } else {
+                res.json({
+                    code: -4,
+                    msg: 'team not found',
+                })
+            }
+        })
+        .catch((err) => {
+            console.log(err);
+        });
+};
 
 exports.quitTeam = function(req, res) {
     let { userId, teamId } = req.body;
@@ -362,6 +403,39 @@ exports.signin = function(req, res) {
           console.log(err)
       });
 }
+
+exports.getUserTasks = function(req, res) {
+    let { userId } = req.query;
+    if(userId) {
+        // console.log(userId);
+        UserModal.findOne({_id: userId})
+            .populate({
+                path: 'tasks',
+                populate: {
+                    path: 'project executor',
+                    populate: {
+                        path: 'members'
+                    }
+                }
+            })
+            .exec()
+            .then((foundUser) => {
+                res.json({
+                    code: 0,
+                    msg: 'ok',
+                    user: foundUser,
+                });
+            })
+            .catch((err) => {
+                console.log(err);
+            });
+    } else {
+        res.json({
+            code: -1,
+            msg: 'params error'
+        });
+    }
+};
 
 exports.getUser = function(req, res) {
   let { userId } = req.query;
