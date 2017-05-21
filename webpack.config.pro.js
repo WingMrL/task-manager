@@ -17,6 +17,7 @@ module.exports = {
         'react-redux',
         'react-router-dom',
         'axios',
+        'moment',
         'react-custom-scrollbars',
       ],
     },
