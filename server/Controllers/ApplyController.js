@@ -21,7 +21,6 @@ exports.approvalApply = function(req, res) {
     let { appliesId, applyingUsersId, applyingTeamId } = req.body;
     
     function save(i) {
-        debugger;
         if(appliesId[i] != undefined) {
             parallel({
                 user: (callback) => {

@@ -45,7 +45,8 @@ class MemberContent extends React.Component {
             };
             axios.get(`${config.serverHost}/api/user/getUserTasks`, data)
                 .then((result) => {
-                    if(result.data.code === 0) {
+                    if(result.data.code == 0) {
+                        // debugger;
                         dispatch(setUserTasks(result.data.user.tasks));
                         this.setState({
                             user: result.data.user,
@@ -98,6 +99,11 @@ class MemberContent extends React.Component {
 
     getTodo = (v) => {
         const { user } = this.props;
+
+        // debugger;
+        if(v.task.executor == null) {
+            return;
+        }
 
         let who = v.task.executor.userName;
         let when = '没有截止日期';
